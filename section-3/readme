@@ -1,0 +1,43 @@
+# Relationships
+
+- One to many Relationships
+- Many to one
+- One to one
+- Many to many
+
+Primary key and foreing key
+
+
+# 1. PRIMARY KEy
+create table users(
+  id SERIAL PRIMARY KEY,
+  username varchar(50)
+);
+
+insert into user (username)
+values ('kevin'), ('kevaron'), ('99stroman');
+
+# Foreing key
+
+create table photos(
+  id serial primary key,
+  url varchar(100),
+  users integer references user(id)
+);
+
+
+create table photos(
+  id serial primary key,
+  url varchar(100),
+  users_id integer,
+  constraint fk_user foreing key (user_id) references users(id)
+);
+
+
+# Delete constraints
+
+ON DELETE RESTRICT -> Throw an error
+ON DELETE NO ACTION -> Throw an error
+ON DELETE CASCADE -> Delete the photo too
+ON DELETE SET NULL -> Set the user_id of the photo to NULL
+ON DELETE SET DEFAULT -> Set the user of the photo to a default value 

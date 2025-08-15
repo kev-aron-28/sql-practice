@@ -1,0 +1,32 @@
+# Relating records with Joins
+
+Joins: Produces values by merging together rows from different related
+tables
+
+Aggregation: Looks at many rows and calculates a single value
+Words like most average least are sign that you need Aggregation
+
+
+# Join
+
+Innerjoin: Get all the photos that has a user
+select contents, username FROM COMMENTS
+JOIN users on users.id = comments.id;
+
+Left join: Get all photos that has a user and also the ones that does not
+select contents, username FROM COMMENTS
+LEFT JOIN users on users.id = comments.id;
+
+
+Right join: Get all photos with a user and all users that does not have a photo
+select contents, username FROM COMMENTS
+RIGHT JOIN users on users.id = comments.id;
+
+
+Full join: get everything
+select contents, username FROM COMMENTS
+FULL JOIN users on users.id = comments.id;
+
+
+# Three way Joins
+
