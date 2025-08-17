@@ -66,4 +66,61 @@ where price > 334
 # In from 
 
 Any subquery, so long as the outer selects, wheres/etc are compatible
+Must have an alias
 
+# In Join
+
+Any subquery that returns data compatible with the ON clause
+
+# In where
+(IN) 
+Select from table
+where field in 
+
+
+< Single value
+> Single value
+>= Single value
+<= single value
+= Single value
+<> != single value
+IN single column
+NOT IN single column
+
+
+New operators
+> ALL Single column
+< ALL
+>= ALL
+<= ALL
+= ALL
+<> ALL
+and the same for some
+
+
+# Correlated subquery
+select name, department, price
+from products as p1
+where p1.price = (
+    select max(price) from products as p2
+    where p1.department = p2.department
+);
+
+
+select name, (
+    select count(*) from orders as o1
+    where o1.product_id = p1.id
+) from products as p1;
+
+# Select without a from
+
+Select <Any subquery that results a single value>
+
+select (
+    select max(price) from products
+) /
+(
+    select min(price) from products
+)
+
+;
