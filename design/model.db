@@ -1,0 +1,73 @@
+table users {
+  id serial [pk, increment]
+  updated_at timestamp
+  created_at timestamp
+  username varchar(30)
+  bio varchar(400)
+  avatar varchar(200)
+  phone_number varchar(25)
+  email varchar(40)
+  status varchar(40)
+}
+
+table posts {
+  id serial [pk, increment]
+  created_at timestamp
+  updated_at timestamp
+  url varchar(200)
+  user_id integer
+  caption varchar(240)
+  lat real
+  lng real 
+}
+
+table photo_tags {
+  id serial [pk, increment]
+  created_at timestamp
+  updated_at timestamp
+  user_id integer [ref: > users.id]
+  post_id intger [ref: > posts.id]
+  x integer
+  y integer
+}
+
+table hashtags {
+  id serial [pk, increment]
+  created_at timestamp
+  title varchar(20)
+}
+
+table hashtas_posts {
+  id serial [pk, increment]
+  hashtag_id integer [ref: > hashtags.id]
+  post_id integer [ref: > posts.id]
+}
+
+table caption_tags {
+  id serial [pk, increment]
+  user_id integer [ref: > users.id]
+  post_id intger [ref: > posts.id]
+}
+
+table comments {
+  id serial [pk, increment]
+  created_at timestamp
+  updated_at timestamp
+  contents varchar(20)
+  user_id integer [ref: > users.id]
+  post_id integer [ref: > posts.id]
+}
+
+table likes {
+  id serial [pk, increment]
+  created_at timestamp
+  user_id integer [ref: > users.id]
+  post_id integer [ref: > posts.id]
+}
+
+table followers {
+  id serial [pk, increment]
+  created_at timestamp
+  leader_id integer [ref: > users.id]
+  follower_id integer [ref: > usersl.id]
+}
