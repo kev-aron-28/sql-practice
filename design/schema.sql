@@ -85,3 +85,26 @@ create table hashtags_posts(
   post_id integer not null references posts(id) on delete cascade,
   unique(hashtag_id, post_id)
 ); 
+
+-- User with 3 highst ids
+select id from users
+order by id DESC
+limit 3;
+
+
+-- Join the users and posts table show the username of user id 200
+-- and the captions of all posts they have created
+
+select username, captions from users
+inner join posts 
+on posts.user_id = users.id
+where posts.user_id = 200;
+
+
+-- show each username and the number of likes that they
+-- have created
+
+select username, count(*) from users
+join likes on users.id = likes.user_id
+group by username;
+
