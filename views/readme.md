@@ -52,3 +52,27 @@ Materialized view: Query that gets executed only at a very specific
 times but the results are saved and can be referenced without rerunning
 the query
 
+# Execercie
+
+For each week, show the number of likes that posts and comments received.
+Use the post adn comment created_at date, not when the like whas received
+
+## Slow query
+
+select date_trunc('week', coalsece(posts.created_at, comments.created_at)), count(posts.id), count(comments.id) as week from likes
+left join posts on posts.id = likes.post_id
+left join comments on comments.id = likes.comment_id;
+group by week
+order by week;
+
+create materialized view weekly_likes as (
+	select date_trunc('week', coalsece(posts.created_at, comments.created_at)), count(posts.id), count(comments.id) as week from likes
+	left join posts on posts.id = likes.post_id
+	left join comments on comments.id = likes.comment_id;
+	group by week
+	order by week;
+) with data;
+
+refresh materialized view weekly_likes;
+
+You have to do it manually
