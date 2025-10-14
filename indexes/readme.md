@@ -48,4 +48,4 @@ Postgres automatically creates an index for the primary key column
 and for unique constraint column
 
 select relname, relkind from pg_class
-where kind = 'i';
+    where kind = 'i';
