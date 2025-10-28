@@ -118,3 +118,38 @@ BEGIN
 END;
 $$;
 CALL subir_salarios(10);
+
+# Functions parameters
+PostgreSQL functions support several parameter types:
+
+| Type       | Description                           |
+| ---------- | ------------------------------------- |
+| `IN`       | Default. Input value.                 |
+| `OUT`      | Returned as a result column.          |
+| `INOUT`    | Used both as input and output.        |
+| `VARIADIC` | Allows variable number of arguments.  |
+| `DEFAULT`  | Default value if argument not passed. |
+
+
+# Return types
+| Type   | Description      | Example                               |
+| ------ | ---------------- | ------------------------------------- |
+| Scalar | Single value     | `RETURNS INT`                         |
+| Record | Custom structure | `RETURNS RECORD`                      |
+| Table  | Query result     | `RETURNS TABLE(col1 TYPE, col2 TYPE)` |
+| Set    | Multiple rows    | `RETURNS SETOF TYPE`                  |
+| Void   | No return        | `RETURNS VOID`                        |
+
+
+# All types
+| Tipo                                             | Descripción                                | Ejemplo                           |
+| ------------------------------------------------ | ------------------------------------------ | --------------------------------- |
+| `integer`, `int`, `smallint`, `bigint`           | Números enteros                            | `salary integer := 5000;`         |
+| `numeric`, `decimal`, `real`, `double precision` | Números con decimales                      | `price numeric(10,2) := 19.99;`   |
+| `serial`, `bigserial`                            | Enteros autoincrementales (solo en tablas) | —                                 |
+| `boolean`                                        | Verdadero o falso                          | `is_active boolean := true;`      |
+| `char(n)`, `varchar(n)`, `text`                  | Cadenas de texto                           | `name text := 'Ana';`             |
+| `date`, `time`, `timestamp`, `timestamptz`       | Fechas y horas                             | `created_at timestamp := now();`  |
+| `interval`                                       | Periodo de tiempo                          | `duration interval := '1 month';` |
+| `uuid`                                           | Identificador único universal              | `id uuid := gen_random_uuid();`   |
+| `bytea`                                          | Datos binarios (archivos, imágenes)        | —                                 |
