@@ -153,3 +153,76 @@ PostgreSQL functions support several parameter types:
 | `interval`                                       | Periodo de tiempo                          | `duration interval := '1 month';` |
 | `uuid`                                           | Identificador único universal              | `id uuid := gen_random_uuid();`   |
 | `bytea`                                          | Datos binarios (archivos, imágenes)        | —                                 |
+
+
+# Deep in procedures
+Unlike functions, procedures:
+don’t return a value directly (but can use output parameters)
+can perform transactional control (COMMIT, ROLLBACK, SAVEPOINT)
+are often used for data operations, maintenance, or batch jobs
+
+## Sintax
+
+CREATE OR REPLACE PROCEDURE procedure_name(param1 type, param2 type)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  -- SQL statements here
+END;
+$$;
+
+| Feature                 | Description                                                            |
+| ----------------------- | ---------------------------------------------------------------------- |
+| **No return value**     | Procedures don’t use `RETURNS`, they just perform work.                |
+| **Transaction control** | Procedures can use `COMMIT` / `ROLLBACK`, functions cannot.            |
+| **OUT parameters**      | You can simulate returning values by using output parameters.          |
+| **Logic control**       | Use variables, loops, IF statements, and error handling.               |
+| **Reusable logic**      | Centralize data manipulation instead of repeating SQL in applications. |
+
+
+# Example 
+create or replace procedure increase_salary(p_percent numeric)
+LANGUAGE plpgsql
+as $$
+BEGIN
+	update employees
+	set salary = salary + (salary * p_percent / 100);
+
+end;
+$$;
+
+Only procedures can perform commit or rollback
+CREATE OR REPLACE PROCEDURE process_orders()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  BEGIN
+    INSERT INTO orders_log SELECT * FROM pending_orders;
+    DELETE FROM pending_orders;
+    COMMIT;
+  EXCEPTION WHEN OTHERS THEN
+    ROLLBACK;
+    RAISE NOTICE 'Something went wrong';
+  END;
+END;
+$$;
+
+## Triggers
+A trigger is a rule that makes PostgresSQL automatically execute a function
+when a specific event happens on a table or a view
+something like a hook in database
+
+
+CREATE TRIGGER trigger_name
+{BEFORE | AFTER | INSTEAD OF} {INSERT | UPDATE | DELETE | TRUNCATE}
+ON table_name
+[FOR EACH ROW | FOR EACH STATEMENT]
+EXECUTE FUNCTION function_name();
+
+| Timing         | Description                                             |
+| -------------- | ------------------------------------------------------- |
+| **BEFORE**     | Runs before the action; can modify or cancel it.        |
+| **AFTER**      | Runs after the action; usually for logging or auditing. |
+| **INSTEAD OF** | Used with views to replace default behavior.            |
+
+
