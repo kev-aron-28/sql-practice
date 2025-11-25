@@ -192,6 +192,7 @@ end;
 $$;
 
 Only procedures can perform commit or rollback
+
 CREATE OR REPLACE PROCEDURE process_orders()
 LANGUAGE plpgsql
 AS $$
@@ -219,6 +220,8 @@ ON table_name
 [FOR EACH ROW | FOR EACH STATEMENT]
 EXECUTE FUNCTION function_name();
 
+# Trigger timing
+
 | Timing         | Description                                             |
 | -------------- | ------------------------------------------------------- |
 | **BEFORE**     | Runs before the action; can modify or cancel it.        |
@@ -226,3 +229,20 @@ EXECUTE FUNCTION function_name();
 | **INSTEAD OF** | Used with views to replace default behavior.            |
 
 
+# What new and old mean? 
+
+| Variable | Meaning                                          | Available in                          |
+| -------- | ------------------------------------------------ | ------------------------------------- |
+| `NEW`    | The **new row** that’s being inserted or updated | `INSERT`, `UPDATE`, `BEFORE` triggers |
+| `OLD`    | The **existing row** before the change           | `UPDATE`, `DELETE` triggers           |
+
+# All special variables
+
+| Variable        | Meaning                                       |
+| --------------- | --------------------------------------------- |
+| `NEW`           | The new row (INSERT/UPDATE)                   |
+| `OLD`           | The old row (UPDATE/DELETE)                   |
+| `TG_OP`         | The operation name (`INSERT`, `UPDATE`, etc.) |
+| `TG_TABLE_NAME` | The table name                                |
+| `TG_WHEN`       | `BEFORE` or `AFTER`                           |
+| `TG_LEVEL`      | `ROW` or `STATEMENT`                          |
