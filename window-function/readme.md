@@ -89,6 +89,7 @@ FROM orders;
 | Simpler but less flexible | More powerful and flexible |
 
 
+<<<<<<< HEAD
 # Inside over
 you can put 3 big components
 1. PARTITION BY
@@ -216,6 +217,52 @@ NTH_VALUE(value, n)
 
 
 
+=======
+# No partition, by no order by
+SELECT
+  employee,
+  amount,
+  SUM(amount) OVER () AS total_all
+FROM sales;
+**For each row, sum all amounts from the whole table**
+
+Every row shows the same number, because the window = entire table
+
+# Partition By
+
+SELECT
+  employee,
+  amount,
+  SUM(amount) OVER (PARTITION BY employee) AS total_per_employee
+FROM sales;
+
+Break the data into small windows one per employee then sum inside each window
+
+| employee | amount | total_per_employee |
+| -------- | ------ | ------------------ |
+| Alice    | 200    | 850                |
+| Alice    | 400    | 850                |
+| Alice    | 250    | 850                |
+| Bob      | 150    | 430                |
+| Bob      | 100    | 430                |
+| Bob      | 180    | 430                |
+| Charlie  | 300    | 900                |
+| Charlie  | 200    | 900                |
+| Charlie  | 400    | 900                |
+
+PARTITION BY employee works like GROUP BY, but keeps all rows visible
+
+# Add order by
+
+SELECT
+  employee,
+  sale_date,
+  amount,
+  SUM(amount) OVER (PARTITION BY employee ORDER BY sale_date) AS running_total
+FROM sales;
+
+**For each employee, go through their rows in date order, and add up everything so far**
+>>>>>>> 086af0283236d143465536de6d3445d3ffb30fb3
 
 
 
