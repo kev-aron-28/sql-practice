@@ -73,3 +73,64 @@ create index idx_clients_email on clientes(email);
 
 # Drop table
 drop table clientes;
+
+# Defining a primary key
+A.
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+
+B.
+CREATE TABLE users (
+  id SERIAL,
+  name TEXT NOT NULL,
+  PRIMARY KEY (id)
+);
+
+or 
+
+CREATE TABLE orders (
+  user_id INT,
+  product_id INT,
+  PRIMARY KEY (user_id, product_id)
+);
+
+C. WIth constraint
+CREATE TABLE users (
+  id INT,
+  name TEXT NOT NULL,
+
+  CONSTRAINT pk_users PRIMARY KEY (id)
+);
+
+# Foreing key
+
+A.
+
+CREATE TABLE orders (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id INT REFERENCES users(id)
+);
+
+user_id INT REFERENCES users(id) ON DELETE CASCADE
+
+
+B. 
+CREATE TABLE orders (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id INT,
+
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CONSTRAINT fk_orders_user
+  FOREIGN KEY (user_id)
+  REFERENCES users(id)
+
+create table t (
+    id serial primary key,
+    user_id int,
+    constraint fk_user_id foreign key (user_id) references user(id) on delete cascade on update cascade
+)
