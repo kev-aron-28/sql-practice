@@ -30,3 +30,5 @@ group by user_id;
 
 GROUP BY Groups rows by a unique set of values
 HAVING Filters the set of gropus
+
+-- Emp
