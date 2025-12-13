@@ -134,3 +134,91 @@ LIMIT 1;
 -- Employees with no subordinates
 select * from employees
 where employees.id not in(select e.manager_id from employees e where e.manager_id is not NULL);
+
+-- Listar clientes que nunca hicieron un pedido.
+select * from customers c left join
+orders o on c.id = o.customer_id
+where o.id is null
+;
+
+-- Listar productos que nunca se han vendido.
+
+select * from products p 
+left join order_items o on p.id = o.product_id
+where o.product_id is null;
+
+-- Listar el pedido con el mayor total
+
+select oi.order_id, sum(oi.quantity * p.price) as total from order_items oi
+inner join products p on p.id = oi.product_id
+inner join orders o on oi.order_id = o.id
+group by oi.order_id
+order by total desc
+limit 1;
+
+-- Listar empleados con salario mayor que el promedio de todos los empleados.
+select * from employees
+where salary > (select avg(e.salary) as average from employees e);
+
+-- Mostrar pedidos del mes de marzo con total y nombre del cliente usando un CTE.
+
+with order_customer as (
+	select c."name", o.order_date from orders o inner join
+	customers c on o.customer_id = c.id
+)
+
+select * from order_customer o
+where extract(month from o.order_date::date) > 2;
+
+-- Mostrar los 2 clientes que más han gastado.
+WITH total_per_customer AS (
+    SELECT 
+        o.customer_id,
+        SUM(oi.quantity * p.price) AS total_gastado
+    FROM orders o
+    JOIN order_items oi ON oi.order_id = o.id
+    JOIN products p ON p.id = oi.product_id
+    GROUP BY o.customer_id
+)
+SELECT 
+    c.id AS customer_id,
+    c.name AS customer_name,
+    t.total_gastado
+FROM total_per_customer t
+JOIN customers c ON t.customer_id = c.id
+ORDER BY t.total_gastado DESC
+LIMIT 2;
+
+-- 
+WITH total_per_customer AS (
+    SELECT 
+        o.customer_id,
+        SUM(oi.quantity * p.price) AS total_gastado
+    FROM orders o
+    JOIN order_items oi ON oi.order_id = o.id
+    JOIN products p ON p.id = oi.product_id
+    GROUP BY o.customer_id
+)
+SELECT 
+    c.id AS customer_id,
+    c.name AS customer_name,
+    t.total_gastado
+FROM total_per_customer t
+JOIN customers c ON t.customer_id = c.id
+ORDER BY t.total_gastado DESC
+LIMIT 2;
+
+-- Mostrar los 2 empleados que más pedidos han gestionado.
+
+with orders_per_employee as (
+	select o.employee_id, count(*) as total from orders o
+	group by o.employee_id
+	order by total desc
+)
+
+select e.name, total from orders_per_employee o join employees e
+on e.id = o.employee_id
+limit 2
+;
+
+
