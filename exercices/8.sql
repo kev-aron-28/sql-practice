@@ -181,3 +181,58 @@ BEGIN
 	return v_completed_tasks::numeric / v_total_assigned_tasks::numeric;
 END
 $$ language plpgsql;
+
+-- Function: department_avg_score(department_id)
+create or replace function department_avg_score (p_department_id int)
+returns numeric as $$
+DECLARE
+	v_avg_score numeric:= 0.0;
+	v_id int;
+BEGIN
+	select id into v_id from departments where id = p_department_id;
+	
+	if not found THEN
+		raise EXCEPTION 'Deparment not found % ', p_department_id;
+	end if;
+	
+	SELECT AVG(u.score)
+    INTO v_avg_score
+    FROM users u
+    WHERE u.department_id = p_department_id
+      AND u.score > 0;
+	
+	return COALESCE(v_avg_score,0);
+	
+END
+$$ language plpgsql;
+
+-- Procedure: complete_task(task_id)
+
+create or replace procedure complete_task(p_task_id int)
+as $$
+DECLARE
+	v_status int;
+BEGIN
+	select status_id 
+	into v_status
+	from tasks
+	where id = p_task_id
+	for update;
+	
+	if not found then
+		raise EXCEPTION 'Task not found';
+	end if;
+	
+	if v_status in (select id from task_status where name = 'completed' or name = 'cancelled') then
+		raise EXCEPTION 'Task is already completed or cancelled';
+	end if;
+	
+	update tasks
+	set status_id = (select id from task_status where name = 'completed'),
+	    completed_at = now()
+	where id = p_task_id;
+END
+$$ LANGUAGE plpgsql;
+
+call complete_task(3);
+
