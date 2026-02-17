@@ -1,0 +1,900 @@
+-- -- Tabla de usuarios
+-- CREATE TABLE usuarios (
+--     id INT PRIMARY KEY,
+--     nombre VARCHAR(100),
+--     email VARCHAR(100),
+--     fecha_registro DATE,
+--     pais VARCHAR(50)
+-- );
+
+-- -- Tabla de categorías
+-- CREATE TABLE categorias (
+--     id INT PRIMARY KEY,
+--     nombre VARCHAR(100),
+--     categoria_padre_id INT,
+--     FOREIGN KEY (categoria_padre_id) REFERENCES categorias(id)
+-- );
+
+-- -- Tabla de productos
+-- CREATE TABLE productos (
+--     id INT PRIMARY KEY,
+--     nombre VARCHAR(200),
+--     precio DECIMAL(10,2),
+--     categoria_id INT,
+--     fecha_creacion DATE,
+--     stock INT,
+--     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+-- );
+
+-- -- Tabla de pedidos
+-- CREATE TABLE pedidos (
+--     id INT PRIMARY KEY,
+--     usuario_id INT,
+--     fecha_pedido TIMESTAMP,
+--     estado VARCHAR(50), -- 'pendiente', 'enviado', 'entregado', 'cancelado'
+--     total DECIMAL(10,2),
+--     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+-- );
+
+-- -- Tabla de detalles de pedido
+-- CREATE TABLE detalles_pedido (
+--     id INT PRIMARY KEY,
+--     pedido_id INT,
+--     producto_id INT,
+--     cantidad INT,
+--     precio_unitario DECIMAL(10,2),
+--     FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+--     FOREIGN KEY (producto_id) REFERENCES productos(id)
+-- );
+
+-- -- Tabla de reseñas
+-- CREATE TABLE resenas (
+--     id INT PRIMARY KEY,
+--     producto_id INT,
+--     usuario_id INT,
+--     calificacion INT, -- 1 a 5
+--     comentario TEXT,
+--     fecha_resena TIMESTAMP,
+--     FOREIGN KEY (producto_id) REFERENCES productos(id),
+--     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+-- );
+
+-- -- Datos 
+-- -- Limpiar tablas si existen datos previos
+-- DELETE FROM resenas;
+-- DELETE FROM detalles_pedido;
+-- DELETE FROM pedidos;
+-- DELETE FROM productos;
+-- DELETE FROM categorias;
+-- DELETE FROM usuarios;
+
+-- -- INSERTAR USUARIOS (50 usuarios)
+-- INSERT INTO usuarios (id, nombre, email, fecha_registro, pais) VALUES
+-- (1, 'Ana García', 'ana.garcia@email.com', '2023-01-15', 'España'),
+-- (2, 'Carlos Rodríguez', 'carlos.rod@email.com', '2023-02-20', 'México'),
+-- (3, 'María López', 'maria.lopez@email.com', '2023-03-10', 'Argentina'),
+-- (4, 'Juan Martínez', 'juan.martinez@email.com', '2023-04-05', 'España'),
+-- (5, 'Laura Hernández', 'laura.hdez@email.com', '2023-05-12', 'Colombia'),
+-- (6, 'Pedro Sánchez', 'pedro.sanchez@email.com', '2023-06-18', 'México'),
+-- (7, 'Sofia González', 'sofia.gonzalez@email.com', '2023-07-22', 'Chile'),
+-- (8, 'Diego Pérez', 'diego.perez@email.com', '2023-08-14', 'Argentina'),
+-- (9, 'Carmen Ruiz', 'carmen.ruiz@email.com', '2023-09-08', 'España'),
+-- (10, 'Javier Torres', 'javier.torres@email.com', '2023-10-25', 'Perú'),
+-- (11, 'Isabel Ramírez', 'isabel.ramirez@email.com', '2023-11-30', 'México'),
+-- (12, 'Roberto Flores', 'roberto.flores@email.com', '2023-12-05', 'Colombia'),
+-- (13, 'Patricia Morales', 'patricia.morales@email.com', '2024-01-10', 'España'),
+-- (14, 'Fernando Castro', 'fernando.castro@email.com', '2024-01-15', 'Argentina'),
+-- (15, 'Andrea Vargas', 'andrea.vargas@email.com', '2024-02-01', 'Chile'),
+-- (16, 'Miguel Ortiz', 'miguel.ortiz@email.com', '2024-02-14', 'México'),
+-- (17, 'Lucía Romero', 'lucia.romero@email.com', '2024-03-05', 'España'),
+-- (18, 'Andrés Silva', 'andres.silva@email.com', '2024-03-20', 'Colombia'),
+-- (19, 'Valentina Mendoza', 'valentina.mendoza@email.com', '2024-04-02', 'Argentina'),
+-- (20, 'Sebastián Núñez', 'sebastian.nunez@email.com', '2024-04-18', 'Chile'),
+-- (21, 'Camila Ríos', 'camila.rios@email.com', '2024-05-08', 'Perú'),
+-- (22, 'Daniel Herrera', 'daniel.herrera@email.com', '2024-05-22', 'México'),
+-- (23, 'Natalia Medina', 'natalia.medina@email.com', '2024-06-10', 'España'),
+-- (24, 'Alejandro Cruz', 'alejandro.cruz@email.com', '2024-06-25', 'Colombia'),
+-- (25, 'Gabriela Reyes', 'gabriela.reyes@email.com', '2024-07-05', 'Argentina'),
+-- (26, 'Ricardo Vega', 'ricardo.vega@email.com', '2024-07-18', 'Chile'),
+-- (27, 'Paula Jiménez', 'paula.jimenez@email.com', '2024-08-01', 'México'),
+-- (28, 'Martín Díaz', 'martin.diaz@email.com', '2024-08-15', 'España'),
+-- (29, 'Carolina Muñoz', 'carolina.munoz@email.com', '2024-09-02', 'Perú'),
+-- (30, 'Felipe Gutiérrez', 'felipe.gutierrez@email.com', '2024-09-20', 'Colombia'),
+-- (31, 'Daniela Molina', 'daniela.molina@email.com', '2024-10-05', 'Argentina'),
+-- (32, 'Raúl Castillo', 'raul.castillo@email.com', '2024-10-18', 'Chile'),
+-- (33, 'Elena Paredes', 'elena.paredes@email.com', '2024-11-01', 'México'),
+-- (34, 'Álvaro Soto', 'alvaro.soto@email.com', '2024-11-15', 'España'),
+-- (35, 'Marina Rojas', 'marina.rojas@email.com', '2024-12-01', 'Colombia'),
+-- (36, 'Cristian Peña', 'cristian.pena@email.com', '2024-12-10', 'Argentina'),
+-- (37, 'Sofía Campos', 'sofia.campos@email.com', '2024-12-20', 'Chile'),
+-- (38, 'Jorge Navarro', 'jorge.navarro@email.com', '2025-01-05', 'Perú'),
+-- (39, 'Adriana Cortés', 'adriana.cortes@email.com', '2025-01-15', 'México'),
+-- (40, 'Pablo Guerrero', 'pablo.guerrero@email.com', '2025-01-20', 'España'),
+-- (41, 'Mónica Espinoza', 'monica.espinoza@email.com', '2023-06-10', 'Colombia'),
+-- (42, 'Héctor Luna', 'hector.luna@email.com', '2023-07-15', 'Argentina'),
+-- (43, 'Beatriz Aguilar', 'beatriz.aguilar@email.com', '2023-08-20', 'Chile'),
+-- (44, 'Ignacio Ramos', 'ignacio.ramos@email.com', '2023-09-25', 'México'),
+-- (45, 'Claudia Fuentes', 'claudia.fuentes@email.com', '2023-10-30', 'España'),
+-- (46, 'Tomás Salazar', 'tomas.salazar@email.com', '2024-01-20', 'Perú'),
+-- (47, 'Verónica Montes', 'veronica.montes@email.com', '2024-03-15', 'Colombia'),
+-- (48, 'Emilio Carrasco', 'emilio.carrasco@email.com', '2024-06-05', 'Argentina'),
+-- (49, 'Silvia Ponce', 'silvia.ponce@email.com', '2024-08-25', 'Chile'),
+-- (50, 'Rodrigo Bravo', 'rodrigo.bravo@email.com', '2024-11-10', 'México');
+
+-- -- INSERTAR CATEGORÍAS (estructura jerárquica)
+-- INSERT INTO categorias (id, nombre, categoria_padre_id) VALUES
+-- -- Categorías padre (nivel 1)
+-- (1, 'Electrónica', NULL),
+-- (2, 'Ropa y Moda', NULL),
+-- (3, 'Hogar y Cocina', NULL),
+-- (4, 'Deportes', NULL),
+-- (5, 'Libros', NULL),
+
+-- -- Subcategorías de Electrónica (nivel 2)
+-- (6, 'Smartphones', 1),
+-- (7, 'Laptops', 1),
+-- (8, 'Accesorios', 1),
+-- (9, 'Audio', 1),
+
+-- -- Subcategorías de Ropa y Moda (nivel 2)
+-- (10, 'Ropa Hombre', 2),
+-- (11, 'Ropa Mujer', 2),
+-- (12, 'Calzado', 2),
+-- (13, 'Accesorios Moda', 2),
+
+-- -- Subcategorías de Hogar (nivel 2)
+-- (14, 'Cocina', 3),
+-- (15, 'Decoración', 3),
+-- (16, 'Muebles', 3),
+
+-- -- Subcategorías de Deportes (nivel 2)
+-- (17, 'Fitness', 4),
+-- (18, 'Deportes Aire Libre', 4),
+
+-- -- Subcategorías de Libros (nivel 2)
+-- (19, 'Ficción', 5),
+-- (20, 'No Ficción', 5);
+
+-- -- INSERTAR PRODUCTOS (80 productos)
+-- INSERT INTO productos (id, nombre, precio, categoria_id, fecha_creacion, stock) VALUES
+-- (1, 'iPhone 14 Pro', 1199.99, 6, '2023-01-10', 45),
+-- (2, 'Samsung Galaxy S23', 999.99, 6, '2023-01-15', 60),
+-- (3, 'Google Pixel 8', 699.99, 6, '2023-02-01', 0),
+-- (4, 'Xiaomi 13 Pro', 799.99, 6, '2023-02-10', 35),
+-- (5, 'OnePlus 11', 649.99, 6, '2023-03-01', 25),
+-- (6, 'MacBook Pro 14"', 1999.99, 7, '2023-01-05', 30),
+-- (7, 'Dell XPS 15', 1599.99, 7, '2023-01-20', 20),
+-- (8, 'Lenovo ThinkPad X1', 1399.99, 7, '2023-02-05', 15),
+-- (9, 'HP Spectre x360', 1299.99, 7, '2023-02-15', 0),
+-- (10, 'ASUS ROG Zephyrus', 1799.99, 7, '2023-03-01', 12),
+-- (11, 'AirPods Pro', 249.99, 8, '2023-01-10', 100),
+-- (12, 'Funda iPhone Universal', 29.99, 8, '2023-01-15', 200),
+-- (13, 'Cargador Rápido USB-C', 39.99, 8, '2023-02-01', 150),
+-- (14, 'Cable HDMI 2.1', 19.99, 8, '2023-02-10', 180),
+-- (15, 'Mouse Logitech MX Master', 99.99, 8, '2023-03-01', 75),
+-- (16, 'Sony WH-1000XM5', 399.99, 9, '2023-01-20', 40),
+-- (17, 'Bose QuietComfort 45', 329.99, 9, '2023-02-05', 35),
+-- (18, 'JBL Flip 6', 129.99, 9, '2023-02-20', 60),
+-- (19, 'Altavoz Bluetooth Sony', 89.99, 9, '2023-03-10', 50),
+-- (20, 'Auriculares Gaming HyperX', 149.99, 9, '2023-03-25', 45),
+-- (21, 'Camisa Formal Blanca', 49.99, 10, '2023-01-05', 80),
+-- (22, 'Jeans Levi\'s 501', 89.99, 10, '2023-01-15', 60),
+-- (23, 'Chaqueta de Cuero', 199.99, 10, '2023-02-01', 25),
+-- (24, 'Polo Ralph Lauren', 79.99, 10, '2023-02-15', 70),
+-- (25, 'Pantalón Chino', 59.99, 10, '2023-03-01', 90),
+-- (26, 'Vestido Negro Elegante', 89.99, 11, '2023-01-10', 50),
+-- (27, 'Blusa de Seda', 69.99, 11, '2023-01-20', 45),
+-- (28, 'Falda Plisada', 54.99, 11, '2023-02-05', 55),
+-- (29, 'Abrigo de Lana', 149.99, 11, '2023-02-20', 30),
+-- (30, 'Jeans Skinny', 79.99, 11, '2023-03-05', 65),
+-- (31, 'Nike Air Max', 139.99, 12, '2023-01-05', 40),
+-- (32, 'Adidas Ultraboost', 159.99, 12, '2023-01-15', 35),
+-- (33, 'Converse Chuck Taylor', 69.99, 12, '2023-02-01', 70),
+-- (34, 'Zapatos Formales Oxford', 99.99, 12, '2023-02-15', 45),
+-- (35, 'Botas Timberland', 189.99, 12, '2023-03-01', 25),
+-- (36, 'Reloj Fossil', 149.99, 13, '2023-01-10', 55),
+-- (37, 'Gafas de Sol Ray-Ban', 159.99, 13, '2023-01-20', 60),
+-- (38, 'Bolso de Mano Coach', 299.99, 13, '2023-02-05', 20),
+-- (39, 'Cinturón de Cuero', 49.99, 13, '2023-02-20', 80),
+-- (40, 'Bufanda de Cachemira', 79.99, 13, '2023-03-05', 40),
+-- (41, 'Batidora KitchenAid', 299.99, 14, '2023-01-05', 30),
+-- (42, 'Olla a Presión Instant Pot', 149.99, 14, '2023-01-15', 45),
+-- (43, 'Juego de Cuchillos', 129.99, 14, '2023-02-01', 35),
+-- (44, 'Cafetera Nespresso', 199.99, 14, '2023-02-15', 0),
+-- (45, 'Licuadora Ninja', 119.99, 14, '2023-03-01', 40),
+-- (46, 'Lámpara de Pie Moderna', 89.99, 15, '2023-01-10', 25),
+-- (47, 'Espejo Decorativo Grande', 129.99, 15, '2023-01-20', 20),
+-- (48, 'Cuadro Abstracto', 79.99, 15, '2023-02-05', 30),
+-- (49, 'Plantas Artificiales Set', 49.99, 15, '2023-02-20', 50),
+-- (50, 'Alfombra Persa 2x3m', 199.99, 15, '2023-03-05', 15),
+-- (51, 'Sofá 3 Plazas', 799.99, 16, '2023-01-05', 10),
+-- (52, 'Mesa de Comedor', 499.99, 16, '2023-01-15', 8),
+-- (53, 'Silla de Oficina Ergonómica', 299.99, 16, '2023-02-01', 25),
+-- (54, 'Estantería de Madera', 179.99, 16, '2023-02-15', 18),
+-- (55, 'Cama King Size', 899.99, 16, '2023-03-01', 6),
+-- (56, 'Mancuernas Ajustables', 149.99, 17, '2023-01-10', 35),
+-- (57, 'Cinta de Correr', 699.99, 17, '2023-01-20', 12),
+-- (58, 'Esterilla de Yoga', 39.99, 17, '2023-02-05', 80),
+-- (59, 'Bicicleta Estática', 399.99, 17, '2023-02-20', 15),
+-- (60, 'Pesas Rusas Set', 89.99, 17, '2023-03-05', 40),
+-- (61, 'Bicicleta de Montaña', 599.99, 18, '2023-01-05', 20),
+-- (62, 'Tienda de Campaña 4P', 249.99, 18, '2023-01-15', 25),
+-- (63, 'Mochila de Senderismo', 119.99, 18, '2023-02-01', 40),
+-- (64, 'Saco de Dormir', 79.99, 18, '2023-02-15', 35),
+-- (65, 'Kayak Inflable', 399.99, 18, '2023-03-01', 10),
+-- (66, 'Cien Años de Soledad', 24.99, 19, '2023-01-10', 100),
+-- (67, '1984 - George Orwell', 19.99, 19, '2023-01-20', 120),
+-- (68, 'El Principito', 14.99, 19, '2023-02-05', 150),
+-- (69, 'Don Quijote de la Mancha', 29.99, 19, '2023-02-20', 80),
+-- (70, 'Harry Potter - Saga Completa', 89.99, 19, '2023-03-05', 45),
+-- (71, 'Sapiens - Yuval Harari', 27.99, 20, '2023-01-05', 90),
+-- (72, 'Hábitos Atómicos', 22.99, 20, '2023-01-15', 110),
+-- (73, 'El Poder del Ahora', 19.99, 20, '2023-02-01', 75),
+-- (74, 'Pensar Rápido, Pensar Despacio', 26.99, 20, '2023-02-15', 60),
+-- (75, 'El Monje que Vendió su Ferrari', 18.99, 20, '2023-03-01', 85),
+-- (76, 'Smartwatch Apple Watch', 449.99, 8, '2023-03-10', 50),
+-- (77, 'Tablet Samsung Galaxy Tab', 349.99, 6, '2023-03-15', 30),
+-- (78, 'Zapatillas Running Asics', 129.99, 12, '2023-03-20', 55),
+-- (79, 'Set de Sartenes Antiadherentes', 99.99, 14, '2023-03-25', 40),
+-- (80, 'Guitarra Acústica Yamaha', 299.99, 9, '2023-04-01', 15);
+
+-- -- INSERTAR PEDIDOS (150 pedidos)
+-- INSERT INTO pedidos (id, usuario_id, fecha_pedido, estado, total) VALUES
+-- (1, 1, '2023-02-10 10:30:00', 'entregado', 1449.98),
+-- (2, 2, '2023-02-15 14:20:00', 'entregado', 89.99),
+-- (3, 3, '2023-03-05 09:15:00', 'entregado', 299.97),
+-- (4, 4, '2023-03-12 16:45:00', 'entregado', 1999.99),
+-- (5, 5, '2023-03-20 11:30:00', 'entregado', 159.98),
+-- (6, 1, '2023-04-02 10:00:00', 'entregado', 249.99),
+-- (7, 6, '2023-04-10 15:30:00', 'entregado', 699.99),
+-- (8, 7, '2023-04-18 13:20:00', 'entregado', 139.99),
+-- (9, 8, '2023-05-05 10:45:00', 'entregado', 549.97),
+-- (10, 9, '2023-05-12 14:15:00', 'entregado', 399.99),
+-- (11, 2, '2023-05-20 09:30:00', 'entregado', 179.98),
+-- (12, 10, '2023-06-01 16:00:00', 'entregado', 799.99),
+-- (13, 11, '2023-06-08 11:45:00', 'entregado', 299.98),
+-- (14, 12, '2023-06-15 13:30:00', 'entregado', 89.99),
+-- (15, 3, '2023-06-25 10:15:00', 'entregado', 649.98),
+-- (16, 13, '2023-07-02 14:45:00', 'entregado', 149.99),
+-- (17, 14, '2023-07-10 09:30:00', 'entregado', 1199.99),
+-- (18, 15, '2023-07-18 15:20:00', 'entregado', 329.98),
+-- (19, 4, '2023-07-25 11:00:00', 'entregado', 799.99),
+-- (20, 16, '2023-08-05 10:30:00', 'entregado', 199.98),
+-- (21, 1, '2023-08-12 14:15:00', 'entregado', 1599.99),
+-- (22, 17, '2023-08-20 09:45:00', 'entregado', 149.99),
+-- (23, 18, '2023-08-28 16:30:00', 'entregado', 599.97),
+-- (24, 19, '2023-09-05 11:20:00', 'entregado', 899.99),
+-- (25, 5, '2023-09-12 13:00:00', 'entregado', 249.98),
+-- (26, 20, '2023-09-20 10:45:00', 'entregado', 399.99),
+-- (27, 21, '2023-09-28 15:15:00', 'entregado', 179.99),
+-- (28, 6, '2023-10-05 09:30:00', 'entregado', 999.99),
+-- (29, 22, '2023-10-12 14:00:00', 'entregado', 449.98),
+-- (30, 23, '2023-10-20 11:45:00', 'entregado', 299.99),
+-- (31, 2, '2024-01-05 10:30:00', 'entregado', 799.99),
+-- (32, 7, '2024-01-08 14:20:00', 'entregado', 1299.99),
+-- (33, 13, '2024-01-12 09:15:00', 'entregado', 549.98),
+-- (34, 14, '2024-01-18 16:45:00', 'entregado', 999.99),
+-- (35, 24, '2024-01-22 11:30:00', 'entregado', 329.97),
+-- (36, 1, '2024-01-28 10:00:00', 'entregado', 1999.99),
+-- (37, 25, '2024-02-02 15:30:00', 'entregado', 449.99),
+-- (38, 8, '2024-02-08 13:20:00', 'entregado', 699.98),
+-- (39, 26, '2024-02-14 10:45:00', 'entregado', 189.99),
+-- (40, 15, '2024-02-20 14:15:00', 'entregado', 899.99),
+-- (41, 3, '2024-02-25 09:30:00', 'entregado', 1199.99),
+-- (42, 27, '2024-03-01 16:00:00', 'entregado', 299.99),
+-- (43, 16, '2024-03-05 11:45:00', 'entregado', 749.97),
+-- (44, 28, '2024-03-10 13:30:00', 'entregado', 499.99),
+-- (45, 9, '2024-03-15 10:15:00', 'entregado', 1599.99),
+-- (46, 4, '2024-03-20 14:45:00', 'entregado', 349.98),
+-- (47, 29, '2024-03-25 09:30:00', 'entregado', 599.99),
+-- (48, 17, '2024-03-30 15:20:00', 'entregado', 249.99),
+-- (49, 30, '2024-04-03 11:00:00', 'entregado', 1399.99),
+-- (50, 10, '2024-04-08 10:30:00', 'entregado', 899.98),
+-- (51, 5, '2024-04-12 14:15:00', 'entregado', 799.99),
+-- (52, 31, '2024-04-18 09:45:00', 'entregado', 449.99),
+-- (53, 18, '2024-04-22 16:30:00', 'entregado', 1199.99),
+-- (54, 11, '2024-04-28 11:20:00', 'entregado', 299.97),
+-- (55, 32, '2024-05-02 13:00:00', 'entregado', 699.99),
+-- (56, 6, '2024-05-08 10:45:00', 'entregado', 1799.99),
+-- (57, 19, '2024-05-12 15:15:00', 'entregado', 549.98),
+-- (58, 33, '2024-05-18 09:30:00', 'entregado', 399.99),
+-- (59, 12, '2024-05-22 14:00:00', 'entregado', 999.99),
+-- (60, 20, '2024-05-28 11:45:00', 'entregado', 249.98),
+-- (61, 1, '2024-06-02 10:30:00', 'entregado', 2199.98),
+-- (62, 34, '2024-06-08 14:20:00', 'entregado', 799.99),
+-- (63, 21, '2024-06-12 09:15:00', 'entregado', 449.99),
+-- (64, 13, '2024-06-18 16:45:00', 'entregado', 1599.99),
+-- (65, 2, '2024-06-22 11:30:00', 'entregado', 329.98),
+-- (66, 35, '2024-06-28 10:00:00', 'entregado', 899.99),
+-- (67, 22, '2024-07-02 15:30:00', 'entregado', 649.97),
+-- (68, 7, '2024-07-08 13:20:00', 'entregado', 1299.99),
+-- (69, 14, '2024-07-12 10:45:00', 'entregado', 499.99),
+-- (70, 36, '2024-07-18 14:15:00', 'entregado', 999.99),
+-- (71, 8, '2024-07-22 09:30:00', 'entregado', 749.98),
+-- (72, 23, '2024-07-28 16:00:00', 'entregado', 399.99),
+-- (73, 3, '2024-08-02 11:45:00', 'entregado', 1899.99),
+-- (74, 37, '2024-08-08 13:30:00', 'entregado', 549.99),
+-- (75, 15, '2024-08-12 10:15:00', 'entregado', 1199.99),
+-- (76, 24, '2024-08-18 14:45:00', 'entregado', 299.98),
+-- (77, 9, '2024-08-22 09:30:00', 'entregado', 1599.99),
+-- (78, 25, '2024-08-28 15:20:00', 'entregado', 449.99),
+-- (79, 16, '2024-09-02 11:00:00', 'entregado', 899.98),
+-- (80, 4, '2024-09-08 10:30:00', 'entregado', 1999.99),
+-- (81, 26, '2024-09-12 14:15:00', 'entregado', 349.99),
+-- (82, 17, '2024-09-18 09:45:00', 'entregado', 699.97),
+-- (83, 10, '2024-09-22 16:30:00', 'entregado', 1299.99),
+-- (84, 27, '2024-09-28 11:20:00', 'entregado', 499.98),
+-- (85, 5, '2024-10-02 13:00:00', 'entregado', 1799.99),
+-- (86, 28, '2024-10-08 10:45:00', 'entregado', 649.99),
+-- (87, 18, '2024-10-12 15:15:00', 'entregado', 999.99),
+-- (88, 11, '2024-10-18 09:30:00', 'entregado', 399.97),
+-- (89, 29, '2024-10-22 14:00:00', 'entregado', 1599.99),
+-- (90, 6, '2024-10-28 11:45:00', 'entregado', 549.98),
+-- (91, 30, '2024-11-02 10:30:00', 'entregado', 2499.99),
+-- (92, 19, '2024-11-08 14:20:00', 'entregado', 799.99),
+-- (93, 12, '2024-11-12 09:15:00', 'entregado', 449.98),
+-- (94, 31, '2024-11-18 16:45:00', 'entregado', 1199.99),
+-- (95, 20, '2024-11-22 11:30:00', 'entregado', 299.99),
+-- (96, 1, '2024-11-28 10:00:00', 'entregado', 1899.99),
+-- (97, 32, '2024-12-02 15:30:00', 'entregado', 699.98),
+-- (98, 21, '2024-12-08 13:20:00', 'entregado', 999.99),
+-- (99, 13, '2024-12-12 10:45:00', 'entregado', 549.97),
+-- (100, 33, '2024-12-18 14:15:00', 'entregado', 1399.99),
+
+-- -- Pedidos recientes y otros estados
+-- (101, 2, '2024-12-22 09:30:00', 'entregado', 449.99),
+-- (102, 34, '2024-12-28 16:00:00', 'enviado', 899.99),
+-- (103, 7, '2025-01-02 11:45:00', 'enviado', 1599.99),
+-- (104, 22, '2025-01-05 13:30:00', 'enviado', 299.98),
+-- (105, 14, '2025-01-08 10:15:00', 'entregado', 799.99),
+-- (106, 35, '2025-01-10 14:45:00', 'enviado', 499.99),
+-- (107, 8, '2025-01-12 09:30:00', 'pendiente', 1199.99),
+-- (108, 23, '2025-01-14 15:20:00', 'pendiente', 349.99),
+-- (109, 3, '2025-01-16 11:00:00', 'entregado', 2199.98),
+-- (110, 15, '2025-01-18 10:30:00', 'enviado', 649.99),
+-- (111, 36, '2025-01-20 14:15:00', 'pendiente', 999.99),
+-- (112, 9, '2025-01-22 09:45:00', 'entregado', 549.98),
+-- (113, 24, '2025-01-24 16:30:00', 'cancelado', 399.99),
+-- (114, 4, '2025-01-25 11:20:00', 'pendiente', 1799.99),
+-- (115, 25, '2025-01-26 13:00:00', 'pendiente', 299.99),
+
+-- -- Más pedidos para usuarios activos (compras múltiples)
+-- (116, 1, '2024-03-15 10:30:00', 'entregado', 549.98),
+-- (117, 1, '2024-05-20 14:20:00', 'entregado', 899.99),
+-- (118, 1, '2024-07-25 09:15:00', 'entregado', 1299.99),
+-- (119, 1, '2024-09-30 16:45:00', 'entregado', 749.98),
+-- (120, 2, '2024-03-10 11:30:00', 'entregado', 399.99),
+-- (121, 2, '2024-05-15 10:00:00', 'entregado', 1199.99),
+-- (122, 2, '2024-07-20 15:30:00', 'entregado', 649.99),
+-- (123, 2, '2024-09-25 13:20:00', 'entregado', 999.99),
+-- (124, 3, '2024-04-12 10:45:00', 'entregado', 549.99),
+-- (125, 3, '2024-06-18 14:15:00', 'entregado', 1399.99),
+-- (126, 3, '2024-08-22 09:30:00', 'entregado', 799.98),
+-- (127, 3, '2024-10-28 16:00:00', 'entregado', 1599.99),
+-- (128, 4, '2024-05-05 11:45:00', 'entregado', 699.99),
+-- (129, 4, '2024-07-10 13:30:00', 'entregado', 1799.99),
+-- (130, 4, '2024-09-15 10:15:00', 'entregado', 449.98),
+-- (131, 5, '2024-04-20 14:45:00', 'entregado', 999.99),
+-- (132, 5, '2024-06-25 09:30:00', 'entregado', 1199.99),
+-- (133, 5, '2024-08-30 15:20:00', 'entregado', 549.98),
+-- (134, 6, '2024-03-25 11:00:00', 'entregado', 1499.99),
+-- (135, 6, '2024-05-30 10:30:00', 'entregado', 899.98),
+-- (136, 6, '2024-08-05 14:15:00', 'entregado', 1299.99),
+-- (137, 7, '2024-04-08 09:45:00', 'entregado', 749.99),
+-- (138, 7, '2024-06-12 16:30:00', 'entregado', 1599.99),
+-- (139, 8, '2024-05-18 11:20:00', 'entregado', 599.98),
+-- (140, 8, '2024-07-22 13:00:00', 'entregado', 1199.99),
+-- (141, 9, '2024-04-28 10:45:00', 'entregado', 899.99),
+-- (142, 9, '2024-06-30 15:15:00', 'entregado', 1399.99),
+-- (143, 10, '2024-05-25 09:30:00', 'entregado', 649.99),
+-- (144, 10, '2024-07-28 14:00:00', 'entregado', 1799.99),
+-- (145, 11, '2024-06-05 11:45:00', 'entregado', 499.98),
+-- (146, 12, '2024-06-15 10:30:00', 'entregado', 999.99),
+-- (147, 13, '2024-07-05 14:20:00', 'entregado', 1299.99),
+-- (148, 14, '2024-07-15 09:15:00', 'entregado', 549.98),
+-- (149, 15, '2024-08-25 16:45:00', 'entregado', 1599.99),
+-- (150, 16, '2024-09-05 11:30:00', 'entregado', 799.99);
+
+-- -- INSERTAR DETALLES DE PEDIDO (300+ items)
+-- INSERT INTO detalles_pedido (id, pedido_id, producto_id, cantidad, precio_unitario) VALUES
+-- (1, 1, 1, 1, 1199.99),
+-- (2, 1, 11, 1, 249.99),
+-- (3, 2, 22, 1, 89.99),
+-- (4, 3, 21, 2, 49.99),
+-- (5, 3, 24, 2, 79.99),
+-- (6, 3, 39, 1, 49.99),
+-- (7, 4, 6, 1, 1999.99),
+-- (8, 5, 31, 1, 139.99),
+-- (9, 5, 12, 1, 19.99),
+-- (10, 6, 11, 1, 249.99),
+-- (11, 7, 2, 1, 699.99),
+-- (12, 8, 31, 1, 139.99),
+-- (13, 9, 26, 2, 89.99),
+-- (14, 9, 27, 3, 69.99),
+-- (15, 9, 36, 1, 149.99),
+-- -- Pedido 10
+-- (16, 10, 16, 1, 399.99),
+-- -- Pedido 11
+-- (17, 11, 32, 1, 159.99),
+-- (18, 11, 12, 1, 19.99),
+-- -- Pedido 12
+-- (19, 12, 51, 1, 799.99),
+-- -- Pedido 13
+-- (20, 13, 41, 1, 299.99),
+-- -- Pedido 14
+-- (21, 14, 22, 1, 89.99),
+-- -- Pedido 15
+-- (22, 15, 7, 1, 1599.99),
+-- (23, 15, 15, 1, 99.99),
+-- (24, 15, 13, 2, 39.99),
+-- (25, 15, 14, 1, 19.99),
+-- -- Pedido 16
+-- (26, 16, 56, 1, 149.99),
+-- -- Pedido 17
+-- (27, 17, 1, 1, 1199.99),
+-- -- Pedido 18
+-- (28, 18, 17, 1, 329.99),
+-- -- Pedido 19
+-- (29, 19, 51, 1, 799.99),
+-- -- Pedido 20
+-- (30, 20, 33, 2, 69.99),
+-- (31, 20, 39, 1, 49.99),
+-- -- Pedido 21
+-- (32, 21, 7, 1, 1599.99),
+-- -- Pedido 22
+-- (33, 22, 42, 1, 149.99),
+-- -- Pedido 23
+-- (34, 23, 66, 4, 24.99),
+-- (35, 23, 67, 3, 19.99),
+-- (36, 23, 68, 5, 14.99),
+-- (37, 23, 71, 3, 27.99),
+-- (38, 23, 72, 2, 22.99),
+-- -- Pedido 24
+-- (39, 24, 55, 1, 899.99),
+-- -- Pedido 25
+-- (40, 25, 11, 1, 249.99),
+-- -- Pedido 26
+-- (41, 26, 16, 1, 399.99),
+-- -- Pedido 27
+-- (42, 27, 53, 1, 179.99),
+-- -- Pedido 28
+-- (43, 28, 2, 1, 999.99),
+-- -- Pedido 29
+-- (44, 29, 76, 1, 449.99),
+-- -- Pedido 30
+-- (45, 30, 41, 1, 299.99),
+-- -- Pedido 31
+-- (46, 31, 51, 1, 799.99),
+-- -- Pedido 32
+-- (47, 32, 8, 1, 1299.99),
+-- -- Pedido 33
+-- (48, 33, 1, 1, 1199.99),
+-- (49, 33, 11, 1, 249.99),
+-- (50, 33, 12, 3, 29.99),
+-- -- Pedido 34
+-- (51, 34, 2, 1, 999.99),
+-- -- Pedido 35
+-- (52, 35, 16, 1, 329.99),
+-- -- Pedido 36
+-- (53, 36, 6, 1, 1999.99),
+-- -- Pedido 37
+-- (54, 37, 76, 1, 449.99),
+-- -- Pedido 38
+-- (55, 38, 2, 1, 699.99),
+-- -- Pedido 39
+-- (56, 39, 35, 1, 189.99),
+-- -- Pedido 40
+-- (57, 40, 55, 1, 899.99),
+-- -- Pedido 41
+-- (58, 41, 1, 1, 1199.99),
+-- -- Pedido 42
+-- (59, 42, 41, 1, 299.99),
+-- -- Pedido 43
+-- (60, 43, 6, 1, 1999.99),
+-- (61, 43, 11, 1, 249.99),
+-- (62, 43, 15, 1, 99.99),
+-- -- Pedido 44
+-- (63, 44, 52, 1, 499.99),
+-- -- Pedido 45
+-- (64, 45, 7, 1, 1599.99),
+-- -- Pedido 46
+-- (65, 46, 77, 1, 349.99),
+-- -- Pedido 47
+-- (66, 47, 61, 1, 599.99),
+-- -- Pedido 48
+-- (67, 48, 11, 1, 249.99),
+-- -- Pedido 49
+-- (68, 49, 8, 1, 1399.99),
+-- -- Pedido 50
+-- (69, 50, 51, 1, 799.99),
+-- (70, 50, 12, 3, 29.99),
+-- -- Pedido 51
+-- (71, 51, 51, 1, 799.99),
+-- -- Pedido 52
+-- (72, 52, 76, 1, 449.99),
+-- -- Pedido 53
+-- (73, 53, 1, 1, 1199.99),
+-- -- Pedido 54
+-- (74, 54, 41, 1, 299.99),
+-- -- Pedido 55
+-- (75, 55, 2, 1, 699.99),
+-- -- Pedido 56
+-- (76, 56, 10, 1, 1799.99),
+-- -- Pedido 57
+-- (77, 57, 1, 1, 1199.99),
+-- (78, 57, 11, 1, 249.99),
+-- (79, 57, 12, 3, 29.99),
+-- -- Pedido 58
+-- (80, 58, 16, 1, 399.99),
+-- -- Pedido 59
+-- (81, 59, 2, 1, 999.99),
+-- -- Pedido 60
+-- (82, 60, 11, 1, 249.99),
+-- -- Pedido 61
+-- (83, 61, 6, 1, 1999.99),
+-- (84, 61, 11, 1, 249.99),
+-- -- Pedido 62
+-- (85, 62, 51, 1, 799.99),
+-- -- Pedido 63
+-- (86, 63, 76, 1, 449.99),
+-- -- Pedido 64
+-- (87, 64, 7, 1, 1599.99),
+-- -- Pedido 65
+-- (88, 65, 17, 1, 329.99),
+-- -- Pedido 66
+-- (89, 66, 55, 1, 899.99),
+-- -- Pedido 67
+-- (90, 67, 2, 1, 699.99),
+-- (91, 67, 11, 1, 249.99),
+-- -- Pedido 68
+-- (92, 68, 8, 1, 1299.99),
+-- -- Pedido 69
+-- (93, 69, 52, 1, 499.99),
+-- -- Pedido 70
+-- (94, 70, 2, 1, 999.99),
+-- -- Pedido 71
+-- (95, 71, 1, 1, 1199.99),
+-- (96, 71, 11, 1, 249.99),
+-- (97, 71, 12, 3, 29.99),
+-- -- Pedido 72
+-- (98, 72, 16, 1, 399.99),
+-- -- Pedido 73
+-- (99, 73, 6, 1, 1999.99),
+-- -- Pedido 74
+-- (100, 74, 1, 1, 1199.99),
+-- (101, 74, 11, 1, 249.99),
+-- -- Pedido 75
+-- (102, 75, 1, 1, 1199.99),
+-- -- Pedido 76
+-- (103, 76, 41, 1, 299.99),
+-- -- Pedido 77
+-- (104, 77, 7, 1, 1599.99),
+-- -- Pedido 78
+-- (105, 78, 76, 1, 449.99),
+-- -- Pedido 79
+-- (106, 79, 51, 1, 799.99),
+-- (107, 79, 12, 3, 29.99),
+-- -- Pedido 80
+-- (108, 80, 6, 1, 1999.99),
+-- -- Pedido 81
+-- (109, 81, 77, 1, 349.99),
+-- -- Pedido 82
+-- (110, 82, 2, 1, 699.99),
+-- -- Pedido 83
+-- (111, 83, 8, 1, 1299.99),
+-- -- Pedido 84
+-- (112, 84, 52, 1, 499.99),
+-- -- Pedido 85
+-- (113, 85, 10, 1, 1799.99),
+-- -- Pedido 86
+-- (114, 86, 2, 1, 699.99),
+-- -- Pedido 87
+-- (115, 87, 2, 1, 999.99),
+-- -- Pedido 88
+-- (116, 88, 16, 1, 399.99),
+-- -- Pedido 89
+-- (117, 89, 7, 1, 1599.99),
+-- -- Pedido 90
+-- (118, 90, 1, 1, 1199.99),
+-- (119, 90, 11, 1, 249.99),
+-- (120, 90, 12, 3, 29.99),
+-- -- Pedido 91
+-- (121, 91, 6, 2, 1999.99),
+-- -- Pedido 92
+-- (122, 92, 51, 1, 799.99),
+-- -- Pedido 93
+-- (123, 93, 76, 1, 449.99),
+-- -- Pedido 94
+-- (124, 94, 1, 1, 1199.99),
+-- -- Pedido 95
+-- (125, 95, 41, 1, 299.99),
+-- -- Pedido 96
+-- (126, 96, 6, 1, 1999.99),
+-- -- Pedido 97
+-- (127, 97, 2, 1, 699.99),
+-- -- Pedido 98
+-- (128, 98, 2, 1, 999.99),
+-- -- Pedido 99
+-- (129, 99, 1, 1, 1199.99),
+-- (130, 99, 11, 1, 249.99),
+-- (131, 99, 12, 3, 29.99),
+-- -- Pedido 100
+-- (132, 100, 8, 1, 1399.99),
+-- -- Continuación de detalles para pedidos restantes
+-- (133, 101, 76, 1, 449.99),
+-- (134, 102, 55, 1, 899.99),
+-- (135, 103, 7, 1, 1599.99),
+-- (136, 104, 41, 1, 299.99),
+-- (137, 105, 51, 1, 799.99),
+-- (138, 106, 52, 1, 499.99),
+-- (139, 107, 1, 1, 1199.99),
+-- (140, 108, 77, 1, 349.99),
+-- (141, 109, 6, 1, 1999.99),
+-- (142, 109, 11, 1, 249.99),
+-- (143, 110, 2, 1, 699.99),
+-- (144, 111, 2, 1, 999.99),
+-- (145, 112, 1, 1, 1199.99),
+-- (146, 112, 11, 1, 249.99),
+-- (147, 112, 12, 3, 29.99),
+-- (148, 113, 16, 1, 399.99),
+-- (149, 114, 10, 1, 1799.99),
+-- (150, 115, 41, 1, 299.99),
+-- -- Detalles para pedidos múltiples
+-- (151, 116, 1, 1, 1199.99),
+-- (152, 116, 11, 1, 249.99),
+-- (153, 116, 12, 3, 29.99),
+-- (154, 117, 55, 1, 899.99),
+-- (155, 118, 8, 1, 1299.99),
+-- (156, 119, 2, 1, 699.99),
+-- (157, 119, 12, 1, 29.99),
+-- (158, 120, 16, 1, 399.99),
+-- (159, 121, 1, 1, 1199.99),
+-- (160, 122, 2, 1, 699.99),
+-- (161, 123, 2, 1, 999.99),
+-- (162, 124, 1, 1, 1199.99),
+-- (163, 124, 11, 1, 249.99),
+-- (164, 125, 8, 1, 1399.99),
+-- (165, 126, 51, 1, 799.99),
+-- (166, 127, 7, 1, 1599.99),
+-- (167, 128, 2, 1, 699.99),
+-- (168, 129, 10, 1, 1799.99),
+-- (169, 130, 76, 1, 449.99),
+-- (170, 131, 2, 1, 999.99),
+-- (171, 132, 1, 1, 1199.99),
+-- (172, 133, 1, 1, 1199.99),
+-- (173, 133, 11, 1, 249.99),
+-- (174, 133, 12, 3, 29.99),
+-- (175, 134, 6, 1, 1499.99),
+-- (176, 135, 55, 1, 899.99),
+-- (177, 136, 8, 1, 1299.99),
+-- (178, 137, 2, 1, 749.99),
+-- (179, 138, 7, 1, 1599.99),
+-- (180, 139, 61, 1, 599.99),
+-- (181, 140, 1, 1, 1199.99),
+-- (182, 141, 55, 1, 899.99),
+-- (183, 142, 8, 1, 1399.99),
+-- (184, 143, 2, 1, 649.99),
+-- (185, 144, 10, 1, 1799.99),
+-- (186, 145, 52, 1, 499.99),
+-- (187, 146, 2, 1, 999.99),
+-- (188, 147, 8, 1, 1299.99),
+-- (189, 148, 1, 1, 1199.99),
+-- (190, 148, 11, 1, 249.99),
+-- (191, 148, 12, 3, 29.99),
+-- (192, 149, 7, 1, 1599.99),
+-- (193, 150, 51, 1, 799.99);
+
+-- -- INSERTAR RESEÑAS (100 reseñas)
+-- -- ELIMINAR RESEÑAS INCORRECTAS
+-- DELETE FROM resenas;
+
+-- -- INSERTAR RESEÑAS CORREGIDAS (100 reseñas con usuario_id entre 1-50)
+-- INSERT INTO resenas (id, producto_id, usuario_id, calificacion, comentario, fecha_resena) VALUES
+-- (1, 1, 1, 5, 'Excelente teléfono, muy rápido y buena cámara', '2023-02-20 10:00:00'),
+-- (2, 1, 4, 5, 'El mejor iPhone que he tenido', '2023-07-30 15:30:00'),
+-- (3, 2, 2, 4, 'Buen teléfono pero la batería podría ser mejor', '2023-03-01 11:20:00'),
+-- (4, 6, 4, 5, 'Increíble para trabajo y edición', '2023-03-25 14:45:00'),
+-- (5, 6, 1, 5, 'Vale cada centavo', '2024-02-10 09:30:00'),
+-- (6, 7, 21, 4, 'Muy buena laptop, solo un poco pesada', '2024-02-20 16:15:00'),
+-- (7, 11, 1, 5, 'El mejor sonido que he probado', '2023-02-25 12:00:00'),
+-- (8, 11, 6, 5, 'Cancelación de ruido perfecta', '2023-04-15 10:45:00'),
+-- (9, 16, 9, 5, 'Calidad de audio excepcional', '2023-05-20 13:30:00'),
+-- (10, 17, 18, 4, 'Muy cómodos pero un poco caros', '2024-04-10 11:00:00'),
+-- (11, 22, 2, 4, 'Clásicos y duraderos', '2023-03-05 14:20:00'),
+-- (12, 31, 7, 5, 'Súper cómodas para correr', '2023-04-25 09:15:00'),
+-- (13, 32, 11, 5, 'Las mejores zapatillas que he tenido', '2023-06-15 16:30:00'),
+-- (14, 41, 13, 5, 'Indispensable en mi cocina', '2023-07-10 10:45:00'),
+-- (15, 42, 6, 4, 'Muy práctica, cocina rápido', '2023-04-20 12:30:00'),
+-- (16, 51, 10, 5, 'Muy cómodo y elegante', '2023-06-10 15:00:00'),
+-- (17, 51, 19, 4, 'Buena calidad pero tardó en llegar', '2023-08-05 11:20:00'),
+-- (18, 55, 24, 5, 'Excelente calidad, muy cómoda', '2023-09-15 14:45:00'),
+-- (19, 56, 16, 4, 'Buenas para empezar en fitness', '2023-07-20 10:30:00'),
+-- (20, 61, 20, 5, 'Perfecta para montaña', '2023-10-05 13:15:00'),
+-- (21, 66, 21, 5, 'Una obra maestra de la literatura', '2023-10-10 09:45:00'),
+-- (22, 67, 8, 5, 'Inquietante y relevante', '2023-05-25 16:20:00'),
+-- (23, 71, 10, 5, 'Fascinante y revelador', '2023-06-20 11:30:00'),
+-- (24, 72, 11, 5, 'Cambió mi forma de ver los hábitos', '2023-06-25 14:00:00'),
+-- (25, 1, 13, 5, 'La cámara es increíble', '2024-02-05 10:15:00'),
+-- (26, 2, 7, 5, 'Android más fluido que he usado', '2024-01-20 15:45:00'),
+-- (27, 6, 36, 5, 'Perfecta para programar', '2024-02-15 12:30:00'),
+-- (28, 7, 3, 4, 'Excelente rendimiento', '2024-03-10 09:20:00'),
+-- (29, 8, 49, 4, 'Muy buena para trabajo', '2024-08-05 16:00:00'),
+-- (30, 10, 6, 5, 'Increíble para gaming', '2024-11-15 11:45:00'),
+-- (31, 11, 11, 5, 'No me los quito nunca', '2024-06-20 13:30:00'),
+-- (32, 16, 26, 5, 'Los mejores audífonos del mercado', '2024-03-15 10:00:00'),
+-- (33, 17, 48, 4, 'Muy buenos pero precio alto', '2024-07-25 14:20:00'),
+-- (34, 21, 41, 4, 'Buena calidad de tela', '2023-07-15 11:30:00'),
+-- (35, 26, 15, 5, 'Elegante y versátil', '2024-03-08 15:45:00'),
+-- (36, 31, 8, 5, 'Las uso todos los días', '2024-02-28 09:15:00'),
+-- (37, 32, 20, 5, 'Comodísimas y duraderas', '2024-06-10 16:30:00'),
+-- (38, 33, 44, 4, 'Clásicas y atemporales', '2023-09-20 12:00:00'),
+-- (39, 36, 9, 5, 'Hermoso diseño', '2023-09-25 10:45:00'),
+-- (40, 37, 23, 5, 'Protegen muy bien del sol', '2024-07-15 13:20:00'),
+-- (41, 41, 42, 5, 'Hace todo en la cocina', '2023-08-10 11:00:00'),
+-- (42, 42, 12, 5, 'Cocina en minutos', '2024-06-05 14:45:00'),
+-- (43, 51, 31, 5, 'Calidad premium', '2024-12-05 10:30:00'),
+-- (44, 52, 44, 4, 'Bonita y funcional', '2024-03-28 15:15:00'),
+-- (45, 53, 28, 5, 'Mi espalda lo agradece', '2024-09-10 12:45:00'),
+-- (46, 55, 8, 5, 'Duermo como nunca', '2024-08-20 09:30:00'),
+-- (47, 56, 22, 4, 'Buenas para el precio', '2024-07-18 16:00:00'),
+-- (48, 57, 7, 5, 'Funciona perfectamente', '2024-01-25 11:20:00'),
+-- (49, 61, 34, 5, 'Resistente y ligera', '2024-06-25 14:30:00'),
+-- (50, 66, 29, 5, 'Un clásico imprescindible', '2024-04-18 10:00:00'),
+-- (51, 1, 25, 4, 'Muy bueno pero caro', '2024-08-12 15:30:00'),
+-- (52, 2, 14, 5, 'El mejor Android', '2024-02-05 12:15:00'),
+-- (53, 6, 46, 5, 'Potencia y elegancia', '2024-12-15 09:45:00'),
+-- (54, 7, 45, 4, 'Excelente construcción', '2024-04-22 16:20:00'),
+-- (55, 11, 16, 5, 'Sonido cristalino', '2024-03-30 11:00:00'),
+-- (56, 16, 23, 5, 'No hay nada mejor', '2024-08-18 13:45:00'),
+-- (57, 17, 32, 4, 'Muy cómodos', '2024-09-28 10:30:00'),
+-- (58, 22, 20, 5, 'Durabilidad garantizada', '2024-03-25 14:15:00'),
+-- (59, 31, 37, 5, 'Perfectas para running', '2024-04-30 12:00:00'),
+-- (60, 32, 10, 5, 'Las recomiendo 100%', '2024-06-15 15:45:00'),
+-- (61, 41, 30, 5, 'La uso todos los días', '2024-01-20 09:20:00'),
+-- (62, 51, 29, 5, 'Elegancia y comodidad', '2024-09-18 16:30:00'),
+-- (63, 55, 40, 5, 'Mejor compra del año', '2024-03-05 11:15:00'),
+-- (64, 61, 42, 5, 'Ideal para aventuras', '2024-11-25 13:00:00'),
+-- (65, 66, 4, 5, 'Maravilloso libro', '2024-05-12 10:45:00'),
+-- (66, 71, 38, 5, 'Me abrió la mente', '2024-10-30 14:30:00'),
+-- (67, 72, 46, 5, 'Transformó mi vida', '2024-06-28 12:20:00'),
+-- (68, 1, 14, 5, 'Cámara espectacular', '2024-06-30 15:00:00'),
+-- (69, 2, 31, 4, 'Gran teléfono', '2024-04-15 11:40:00'),
+-- (70, 6, 11, 5, 'La mejor inversión', '2024-07-08 09:55:00'),
+-- (71, 7, 33, 5, 'Rápida y confiable', '2024-10-02 16:10:00'),
+-- (72, 11, 46, 5, 'Audio premium', '2024-12-08 10:25:00'),
+-- (73, 16, 41, 5, 'Increíbles', '2024-02-18 13:35:00'),
+-- (74, 31, 29, 5, 'Las mejores', '2024-09-22 11:50:00'),
+-- (75, 41, 16, 5, 'Muy versátil', '2024-07-12 14:05:00'),
+-- (76, 51, 2, 5, 'Súper cómodo', '2025-01-08 12:40:00'),
+-- (77, 55, 20, 5, 'Excelente', '2024-08-05 15:20:00'),
+-- (78, 61, 13, 5, 'Resistente', '2024-06-20 09:30:00'),
+-- (79, 76, 29, 5, 'Muy completo', '2024-04-25 16:45:00'),
+-- (80, 76, 37, 5, 'Funciona perfecto', '2024-08-28 11:15:00'),
+-- (81, 76, 2, 4, 'Buena relación calidad-precio', '2024-05-08 13:50:00'),
+-- (82, 77, 46, 4, 'Cumple lo esperado', '2024-04-02 10:35:00'),
+-- (83, 2, 18, 5, 'Fantástico', '2024-07-20 14:25:00'),
+-- (84, 6, 9, 5, 'Simplemente perfecta', '2025-01-22 12:10:00'),
+-- (85, 8, 32, 4, 'Muy buena', '2024-02-12 15:40:00'),
+-- (86, 10, 35, 5, 'Para juegos es lo mejor', '2024-10-15 09:05:00'),
+-- (87, 16, 50, 5, 'Calidad Sony', '2024-12-28 16:55:00'),
+-- (88, 31, 12, 5, 'Comodidad total', '2025-01-28 11:30:00'),
+-- (89, 41, 1, 5, 'Herramienta esencial', '2025-01-10 13:45:00'),
+-- (90, 51, 48, 5, 'Hermoso sofá', '2024-12-22 10:20:00'),
+-- (91, 55, 14, 5, 'Descanso perfecto', '2025-01-28 14:00:00'),
+-- (92, 61, 37, 5, 'Aventuras garantizadas', '2024-10-25 12:35:00'),
+-- (93, 66, 49, 5, 'Obra maestra', '2024-12-30 15:15:00'),
+-- (94, 71, 5, 5, 'Lectura obligada', '2025-01-15 09:50:00'),
+-- (95, 2, 31, 5, 'Lo recomiendo', '2024-09-15 16:25:00'),
+-- (96, 6, 23, 5, 'Impresionante', '2024-08-10 11:05:00'),
+-- (97, 16, 10, 5, 'Los mejores', '2025-01-25 13:20:00'),
+-- (98, 51, 12, 5, 'Calidad superior', '2024-06-18 10:40:00'),
+-- (99, 55, 39, 5, 'Vale la pena', '2024-11-05 14:55:00'),
+-- (100, 76, 43, 5, 'Muy útil', '2024-11-20 12:15:00');
+
+-- -- Verificar reseñas
+-- SELECT 'Reseñas corregidas:', COUNT(*) as Total FROM resenas;
+
+-- -- Verificar que los datos se insertaron correctamente
+-- SELECT 'Usuarios insertados:' as Tabla, COUNT(*) as Total FROM usuarios
+-- UNION ALL
+-- SELECT 'Categorías insertadas:', COUNT(*) FROM categorias
+-- UNION ALL
+-- SELECT 'Productos insertados:', COUNT(*) FROM productos
+-- UNION ALL
+-- SELECT 'Pedidos insertados:', COUNT(*) FROM pedidos
+-- UNION ALL
+-- SELECT 'Detalles de pedido insertados:', COUNT(*) FROM detalles_pedido
+-- UNION ALL
+-- SELECT 'Reseñas insertadas:', COUNT(*) FROM resenas;
+
+
+-- Top 10 Productos Más Vendidos: Obtén los 10 productos más vendidos (por cantidad total de unidades) junto con la cantidad total vendida y el ingreso total generado.
+
+select producto_id, sum(cantidad) as total_piezas, SUM(cantidad * precio_unitario) AS ingreso_total from detalles_pedido
+group by producto_id
+order by total_piezas desc
+limit 10;
+
+-- Clientes Sin Compras: Lista todos los usuarios que nunca han realizado un pedido.
+select u.nombre from usuarios u left join productos p 
+on p.usuario_id = u.id
+where p.id is NULL;
+
+-- Productos Sin Stock: Encuentra todos los productos que tienen stock igual a 0 y que pertenecen a categorías que tienen al menos 5 productos diferentes.
+with categories_with_more_than_5 as (
+select c.id as cat_id from categorias c inner join productos p
+on c.id = p.categoria_id
+group by c.id, c.nombre
+having count(*) > 4
+)
+
+select * from productos p where stock = 0
+and p.categoria_id in (select cat_id from categories_with_more_than_5);
+
+-- Nivel Intermedio-Avanzado
+
+-- Análisis de Categorías: Para cada categoría padre (aquellas que tienen categoria_padre_id IS NULL), calcula:
+
+-- 1. Número total de productos (incluyendo subcategorías)
+-- 2. Promedio de calificación de todos los productos
+-- 3. Ingreso total generado
+-- Ordena por ingreso total descendente.
+
+with recursive category_tree as (
+	select id as root_id, id as child_id from categorias where categoria_padre_id is null
+
+	union all
+	
+	select ct.root_id, c.id  from category_tree ct inner join categorias c
+	on c.categoria_padre_id = ct.child_id
+)
+
+select c.nombre, count(DISTINCT p.id), avg(r.calificacion), COALESCE(sum(d.cantidad * d.precio_unitario)) as ingreso  from category_tree ct 
+join categorias c on c.id = ct.root_id
+left join productos p on p.categoria_id = ct.child_id
+left join resenas r on r.producto_id = p.id
+left join detalles_pedido d on d.producto_id = p.id
+group by c.id, c.nombre
+
+
+
+-- Clientes VIP por País: Para cada país, identifica los 3 clientes que más dinero han gastado en pedidos entregados durante 2024. Muestra: país, nombre del cliente, email y total gastado.
+-- Tasa de Conversión Mensual: Calcula la tasa de conversión mensual (porcentaje de usuarios registrados ese mes que hicieron al menos una compra en los siguientes 30 días). Muestra los últimos 12 meses.
+
+-- Nivel Avanzado
+
+-- Análisis de Cohortes: Agrupa a los usuarios por mes de registro y calcula para cada cohorte:
+
+-- Número de usuarios registrados
+-- Porcentaje que realizó al menos una compra en el primer mes
+-- Porcentaje que realizó al menos una compra en el segundo mes
+-- Porcentaje que realizó al menos una compra en el tercer mes
+
+-- (Este es un análisis de retención simplificado)
+-- Productos Complementarios: Encuentra pares de productos que frecuentemente se compran juntos (aparecen en el mismo pedido). Lista los 10 pares más comunes con la cantidad de veces que aparecieron juntos. Excluye combinaciones donde producto_id1 = producto_id2.
+-- Análisis RFM Simplificado: Implementa un análisis RFM (Recency, Frequency, Monetary) básico:
+
+-- Recency: días desde la última compra
+-- Frequency: número total de pedidos completados
+-- Monetary: total gastado en pedidos completados
+
+-- Asigna un score de 1-5 para cada métrica (5 siendo el mejor) usando quintiles. Muestra los usuarios con su score RFM y clasifícalos en segmentos (por ejemplo, "Champions" = 555, "Hibernating" = usuarios con baja puntuación en todas las métricas).
+-- Window Functions Challenge: Calcula para cada pedido:
+
+-- El número de pedido del usuario (ordenado por fecha)
+-- La diferencia en días con el pedido anterior del mismo usuario
+-- El total acumulado gastado por el usuario hasta ese pedido
+-- La diferencia porcentual del total del pedido vs el promedio móvil de los últimos 3 pedidos del usuario
+
+-- Muestra solo pedidos donde la diferencia vs el promedio móvil sea mayor al 50%.
+
+-- Bonus
+
+-- Query de Optimización: Escribe una consulta que identifique productos que:
+
+-- Tienen calificación promedio >= 4.0
+-- Han sido vendidos en al menos 10 pedidos diferentes
+-- Tienen stock bajo (menos del 20% del promedio de stock de su categoría)
+-- No han sido reabastecidos en los últimos 30 días (no han tenido cambios en stock)
+
+-- Estos serían productos candidatos para reabastecer pronto.

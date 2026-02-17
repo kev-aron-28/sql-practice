@@ -28,7 +28,7 @@ explain anaylize select *
 from users
 where usersname = '';
 
-
+ 
 # Downside of indexes
 
 You use some additional space to store the tree data strucuture
@@ -36,16 +36,30 @@ for indexes
 
 Slows down insert/update/delete, the index has to be updated
 
+select pg_size_pretty(pg_relation_size('users')); 
+
 # Index types
-- B-tree index
-- hash
-- GiST
-- SP-GiSt
-- GIN
-- BRIN
+- B-tree index: General purpose index,
+- hash: SPeeds up simple equailty checks,
+- GiST: Geomtry: full-text search,
+- SP-GiSt: Clustered data, such as dates - many rows might have the same year
+- GIN: For columns that contain arrays or JSON data
+- BRIN:  Specialized for really large datasets
 
 Postgres automatically creates an index for the primary key column
 and for unique constraint column
 
+To check all the indexes created: 
+``` sql
 select relname, relkind from pg_class
     where kind = 'i';
+```
+
+## How an index file is stored?
+
+Theres 8k blocks 
+- Mata page
+- Root block/page
+- Lead blok/page
+- Leaf block/page
+

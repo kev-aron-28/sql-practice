@@ -1,14 +1,12 @@
-# Query processing pipeline
+# Query tunning 
 
-Parser -> Builds the query tree
+## The query processing pipeline
+1. Parser -> builds the query tree 
+2. Rewrite -> Decompose views into underlying table references
+3. Planner -> Choose which strategy to execute the query given
+4. Execute -> Run the strategy
 
-Rewrite -> Decompose views into underlying table references
+## explain vs explain analyze
 
-Planner -> 
-
-Execute ->
-
-Explain: Build a query plan and display info about it
-Explain analyze: Build a query plan, run it and info about it
-
-
+Explain -> BUild a query plan and display info about it 
+Explain analyze -> Build a query plan, run it, and info about it
