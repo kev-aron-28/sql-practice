@@ -44,7 +44,7 @@ add column created_at date default current_date;
 alter table users
 rename to clients;
 
-#Change column name
+# Change column name
 alter table users
 rename column edad to email;
 

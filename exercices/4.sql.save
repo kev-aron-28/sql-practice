@@ -1,0 +1,107 @@
+CREATE TABLE customers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    city VARCHAR(100)
+);
+
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10,2),
+    category VARCHAR(50)
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customers(id),
+    order_date DATE
+);
+
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INT REFERENCES orders(id),
+    product_id INT REFERENCES products(id),
+    quantity INT
+);
+
+
+INSERT INTO customers (name, email, city) VALUES
+('Juan Pérez', 'juan@example.com', 'CDMX'),
+('María López', 'maria@example.com', 'Guadalajara'),
+('Carlos Ruiz', 'carlos@example.com', 'Monterrey');
+
+INSERT INTO products (name, price, category) VALUES
+('Laptop', 15000, 'Electrónica'),
+('Mouse', 300, 'Electrónica'),
+('Escritorio', 2500, 'Muebles'),
+('Silla', 1800, 'Muebles');
+
+INSERT INTO orders (customer_id, order_date) VALUES
+(1, '2024-03-01'),
+(2, '2024-03-02'),
+(1, '2024-03-05');
+
+INSERT INTO order_items (order_id, product_id, quantity) VALUES
+(1, 1, 1),  -- Juan compra 1 laptop
+(1, 2, 2),  -- Juan compra 2 mouse
+(2, 3, 1),  -- María compra 1 escritorio
+(3, 4, 2),  -- Juan compra 2 sillas
+(3, 2, 1);  -- Juan compra 1 mouse
+
+
+-- 1 Obtener todos los clientes ordenados por nombre.
+SELECT * FROM CUSTOMERS ORDER BY NAME;
+-- 2 Obtener todos los productos de la categoría “Electrónica”.
+SELECT * FROM PRODUCTS WHERE CATEGORY = 'Electrónica';
+
+-- 3 Obtener los pedidos realizados por el cliente con id = 1.
+SELECT * FROM ORDERS WHERE CUSTOMER_ID = 1;
+
+-- 4 Obtener los pedidos con el nombre del cliente.
+SELECT C.NAME, O.ID FROM ORDERS O INNER JOIN CUSTOMERS C
+ON O.CUSTOMER_ID = C.ID;
+
+-- 5 Obtener todos los ítems de pedido con nombre de producto y precio.
+SELECT * FROM ORDER_ITEMS O INNER JOIN PRODUCTS P
+ON O.PRODUCT_ID = P.ID;
+
+-- 6 Listar los pedidos con su total (sumando precio * cantidad).
+SELECT O.ORDER_ID, O.QUANTITY, P.PRICE, O.QUANTITY * PRICE AS TOTAL FROM ORDER_ITEMS O INNER JOIN PRODUCTS P
+ON O.PRODUCT_ID = P.ID;
+
+-- 7 Obtener cuántos pedidos ha hecho cada cliente.
+SELECT CUSTOMER_ID, COUNT(*) FROM ORDERS O
+GROUP BY CUSTOMER_ID;
+
+-- 8 Total gastado por cada cliente.
+SELECT 
+ C.NAME, 
+ SUM(QUANTITY * PRICE)
+FROM ORDER_ITEMS O INNER JOIN 
+ORDERS R ON O.ORDER_ID = R.ID
+INNER JOIN CUSTOMERS C ON 
+R.CUSTOMER_ID = C.ID
+INNER JOIN PRODUCTS P ON
+O.PRODUCT_ID = P.ID
+GROUP BY C.NAME
+;
+
+
+-- 9 Total de ventas por categoría de producto.
+
+-- Listar el producto más vendido.
+-- Obtener el cliente que más dinero ha gastado.
+-- Obtener los productos que nunca se han vendido.
+-- Obtener los clientes que NO han hecho pedidos.
+-- Mostrar el pedido con el total más alto.
+-- Obtener el ticket detallado de un pedido (ID 1)
+
+
+
+
+
+
+
+
+

@@ -246,3 +246,38 @@ EXECUTE FUNCTION function_name();
 | `TG_TABLE_NAME` | The table name                                |
 | `TG_WHEN`       | `BEFORE` or `AFTER`                           |
 | `TG_LEVEL`      | `ROW` or `STATEMENT`                          |
+
+# ACID
+Atomicity → All or nothing
+Consistency → No negative transfers allowed
+Isolation → Row locking with FOR UPDATE
+Durability → After commit, it's permanent
+
+Even if you don't explicitly write BEGIN/COMMIT inside a procedure:
+PostgreSQL already runs each CALL inside a transaction automatically.
+
+```
+CALL transfer(1,2,100);
+```
+Is already atomic.
+
+
+## What is FOR UPDATE?
+FOR UPDATE is a row-level lock.
+
+It:
+- Locks the selected rows
+- Prevents other transactions from:
+- Updating them
+- Deleting them
+- Selecting them with FOR UPDATE
+
+Until the transaction finishes (COMMIT or ROLLBACK)
+
+
+### Different locking variants
+FOR UPDATE
+FOR NO KEY UPDATE
+FOR SHARE
+FOR KEY SHARE
+
