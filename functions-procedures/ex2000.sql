@@ -73,4 +73,150 @@ begin
 end;
 $$ LANGUAGE plpgsql;
 
--- 3. 
+-- 3. Deposit Money
+create or replace procedure deposit (p_account_id int, p_amount numeric)
+as $$
+declare
+	v_balance NUMERIC;
+	v_status varchar;
+begin
+
+	if p_amount < 0 then
+		raise exception 'Negative numbers not allowed';
+	end if;
+	
+	select 
+		balance into v_balance,
+		status into v_status
+	from accounts where id = p_account_id
+	for update;
+	
+	if not found then 
+		raise exception 'Account does not exists';
+	end if;
+	
+	if v_status <> 'ACTIVE' then
+		raise EXCEPTION 'Account is not active';
+	end if;
+	
+	
+	update accounts
+	set balance = balance + p_amount
+	where id = p_account_id;
+	
+	insert into transactions (account_id,type,amount,created_at) values 
+	(p_account_id,'DEPOSIT',p_amount,now());
+
+end;
+$$ LANGUAGE plpgsql;
+
+-- withdraw money
+create or replace procedure withdraw(p_account_id int, p_amount NUMERIC)
+as $$
+declare
+	v_status varchar;
+	v_balance numeric;
+BEGIN
+
+	if p_amount <= 0 then
+		raise exception 'No negative amounts';
+	end if;
+	
+	select 
+		balance into v_balance,
+		status into v_status
+	from accounts where id = p_account_id
+	for update;
+	
+	
+	if not found then 
+		raise exception 'Account not found';
+	end if;
+	
+	if v_status <> 'ACTIVE' then
+		raise exception 'Account not active';
+	end if;
+	
+	if p_amount > v_balance then
+		raise exception 'Insuficcient funds';
+	end if;
+	
+	update accounts
+	set balance = balance - p_amount
+	where id = p_account_id;
+	
+	insert into transactions (account_id,type,amount,created_at) values
+	(p_account_id,'WITHDRAW',p_amount,now());
+end;
+$$ language plpgsql;
+
+-- transfer money between accounts
+create or replace procedure transfer(p_from int, p_to int, p_amount numeric)
+as $$
+declare
+	v_from_status varchar;
+	v_to_status varchar;
+	v_from_balance numeric;
+begin
+
+	if p_amount <= 0 then
+		raise EXCEPTION 'No negative amount';
+	end if;
+	
+	if p_from = p_to then
+		raise EXCEPTION 'Cannot transfer to same account';
+	end if;
+	
+	perform id from accounts
+	where id in (p_from, p_to)
+	order by id
+	for update;
+
+
+	select balance, status into
+	       v_from_balance, v_from_status
+	 from accounts where id = p_from;
+	 
+	 if not found then
+	 	raise exception 'From account not found';
+	 end if;
+	 
+	 if v_from_status <> 'ACTIVE' then
+	 	raise exception 'From account is not active';
+	 end if;
+	 
+	 if v_from_balance < p_amount then
+	 	raise exception 'Insufficient funds in from account';
+	 end if;
+	 
+	 select status into v_to_status
+	 from accounts where id = p_to;
+	 
+	 if not found then
+	 	raise EXCEPTION 'to account not found';
+	 end if;
+	 
+	 if v_to_status <> 'ACTIVE' then
+	 	raise exception 'To account not active';
+	 end if;
+	 
+	 -- From
+	 update accounts
+	 set balance = balance - p_amount
+	 where id = p_from;
+	 
+	 -- To
+	 
+	 update accounts
+	 set balance = balance + p_amount
+	 where id = p_to;
+	 
+	INSERT INTO transactions(account_id, type, amount)
+    VALUES (p_from, 'TRANSFER_OUT', p_amount);
+
+    INSERT INTO transactions(account_id, type, amount)
+    VALUES (p_to, 'TRANSFER_IN', p_amount);
+	
+end;
+$$ language plpgsql;
+
