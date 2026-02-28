@@ -129,3 +129,41 @@ select
 	category,
 	avg(quantity * unit_price) over(partition by category)
 from order_items;
+
+-- Acumulado de ventas por categoria en el tiempo
+
+select 
+	oi.category, 
+	order_date, 
+	sum(quantity * unit_price) as total_per_day,
+	sum(sum(quantity * unit_price)) over (partition by category order by o.order_date)
+	from order_items oi join orders o on oi.order_id = o.id
+where status = 'delivered'
+group by o.order_date,oi.category
+order by o.order_date asc;
+
+-- Comparar cada producto contra el producto mas caro de su categoria
+select	
+	category,
+	product_name,
+	unit_price,
+	first_value(unit_price) over (partition by category order by unit_price desc)
+from order_items;
+
+-- Top 2 productos por pais
+
+select * from 
+(
+	select 
+	c.country, 
+	oi.product_name, 
+	sum(oi.unit_price * oi.quantity) as total_per_product,
+	rank() over (partition by country order by sum(oi.unit_price * oi.quantity) desc) as ranking
+	from customers c 
+	join orders o on o.customer_id = c.id
+	join order_items oi on oi.order_id = o.id
+	group by c.country, oi.product_name
+	order by sum(oi.unit_price * oi.quantity) desc
+) t
+where ranking <= 2
+order by country, ranking;
