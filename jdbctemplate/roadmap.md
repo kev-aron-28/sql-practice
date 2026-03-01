@@ -1,0 +1,24 @@
+- Configuration Deep Dive
+    - Datasource
+    - HikariCP
+    - Connection pooling
+- Core operations
+    - parameter binding
+    - SQL types
+    - How it prevents injection
+- RowMapper
+    - How ResultSet works
+    - Column mapping
+    - Null handling
+    - type conversion
+    - when to use BeanPropertyRowMapper
+- Advanced query techniques
+    - NamedParameterJdbcTemplate
+    - BatchUpdates
+    - GeneratedKeys
+- Transactions
+    - @Transactional
+    - Propagation
+    - Isolation levels
+    - rollback rules
+- Testing
