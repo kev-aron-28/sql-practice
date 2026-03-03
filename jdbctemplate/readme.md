@@ -105,3 +105,72 @@ with this you enable @Transactional:
 - Opens connection
 - sets autocomit(false)
 - commits or rollbacks
+
+# Core operations
+Everythign revolves around how PreparedStatement works underneath JdbcTemplate
+
+## Parameter binding
+When you write:
+
+``` java
+jdbcTemplate.update(
+    "INSERT INTO users(name, email) VALUES (?, ?)",
+    name,
+    email
+);
+```
+Internally:
+1. JDBC template gets a connection
+2. Calls prepareStatement
+3. Binds parameters with setX
+4. Executes
+
+
+## SQL types
+- VARCHAR
+- INTEGER
+- BIGINT
+- TIMESTAMP
+- BOOLEAN
+- NUMERIC
+
+and JdbcMust map between them
+
+- Automatic type detection: The driver determines SQL type automatically
+- Explicit SQL types
+
+``` java
+ template.update(query,
+    new Object[] { name, null },
+    new int[] { Types.VARCHAR, Types.VARCHAR }
+);
+```
+
+## Core operations
+- update(): Insert, update, delete
+- query(): Multiple rows
+- queryForObject(): Single row/ single column
+- queryForList(), queryForMap()
+- batchUpdate()
+- execute()
+
+### UPDATE()
+This is used for data modification like update, insert, delete
+``` java
+jdbcTemplate.update(
+    "UPDATE users SET name = ? WHERE id = ?",
+    "Kevin",
+    1L
+);
+```
+
+``` java
+jdbcTemplate.update(
+    "INSERT INTO users(name, age) VALUES (?, ?)",
+    new Object[]{"Kevin", 21},
+    new int[]{Types.VARCHAR, Types.INTEGER}
+);
+```
+
+### QUERY()
+Returns a List<T> and needs a RowMapper
