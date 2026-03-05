@@ -174,3 +174,164 @@ jdbcTemplate.update(
 
 ### QUERY()
 Returns a List<T> and needs a RowMapper
+
+``` java
+List<User> users = jdbcTemplate.query(
+    "SELECT * FROM users",
+    new UserRowMapper()
+);
+
+List<User> users = jdbcTemplate.query(
+    "SELECT * FROM users",
+    (rs, rowNum) -> new User(
+        rs.getLong("id"),
+        rs.getString("name"),
+        rs.getString("email")
+    )
+);
+```
+
+### QUERYFOROBJECT() 
+Used when expeting one row
+This throws an exception if 0 rows
+Throws an exception if > 1 row
+``` java
+User user = jdbcTemplate.queryForObject(
+    "SELECT * FROM users WHERE id = ?",
+    new UserRowMapper(),
+    1L
+);
+
+Integer count = jdbcTemplate.queryForObject(
+    "SELECT COUNT(*) FROM users",
+    Integer.class
+);
+```
+
+### QUERYFORLIST() and QUERYFORMAP()
+- queryForList()
+Each row is a Map
+
+``` java
+List<Map<String, Object>> results =
+    jdbcTemplate.queryForList("SELECT * FROM users");
+```
+
+- queryForMap()
+Returns one row as a Map
+but throws exception if more than one row
+``` java
+Map<String, Object> user =
+    jdbcTemplate.queryForMap(
+        "SELECT * FROM users WHERE id = ?",
+        1L
+    );
+```
+
+- batchUpdate() 
+Used when inserting/updating many rows
+
+``` java
+jdbcTemplate.batchUpdate(
+    "INSERT INTO users(name) VALUES (?)",
+    List.of(
+        new Object[]{"Kevin"},
+        new Object[]{"Ana"}
+    )
+);
+
+jdbcTemplate.batchUpdate(
+    "INSERT INTO users(name, age) VALUES (?, ?)",
+    users,
+    users.size(),
+    (ps, user) -> {
+        ps.setString(1, user.getName());
+        ps.setInt(2, user.getAge());
+    }
+);
+```
+
+### EXECUTE()
+Most flexibe method
+
+``` java
+jdbcTemplate.execute(
+    "CREATE TABLE test(id INT)"
+);
+```
+
+# RowMapper
+## What is a RowMapper really?
+RowMapper is an interface
+
+``` java
+public interface RowMapper<T> {
+    T mapRow(ResultSet rs, int rowNum) throws SQLException;
+}
+```
+
+A function that converts one row of a result set into a java object
+
+
+How ResultSet works?
+This comes from JDBC
+Result set:
+- is not thread safe
+- not cached
+- backed by database cursor
+
+## Column mapping strategies
+- By column index
+- By column name
+
+``` java
+rs.getLong(1);
+rs.getLong("id");
+```
+
+## Alias mapping
+select first_name as firstName from users;
+``` java
+rs.getString("firstName");
+```
+
+## Null handling (critical)
+
+``` java
+long id = rs.getLong("id");
+if (rs.wasNull()) {
+    // handle null
+}
+```
+
+``` java
+Long id = rs.getObject("id", Long.class);
+```
+
+# Type conversion
+| SQL Type  | Java Type     |
+| --------- | ------------- |
+| BIGINT    | Long          |
+| INTEGER   | Integer       |
+| VARCHAR   | String        |
+| BOOLEAN   | Boolean       |
+| DATE      | LocalDate     |
+| TIMESTAMP | LocalDateTime |
+| NUMERIC   | BigDecimal    |
+
+``` java
+public class UserRowMapper implements RowMapper<User> {
+
+    @Override
+    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+        return new User(
+            rs.getObject("id", Long.class),
+            rs.getString("name"),
+            rs.getString("email"),
+            rs.getObject("age", Integer.class),
+            rs.getObject("created_at", LocalDateTime.class)
+        );
+    }
+}
+```

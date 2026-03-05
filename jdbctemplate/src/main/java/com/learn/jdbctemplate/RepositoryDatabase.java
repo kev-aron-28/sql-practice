@@ -25,7 +25,6 @@ public class RepositoryDatabase {
             new int[] { Types.VARCHAR, Types.VARCHAR }
         );
 
-        
 
     }
 }
