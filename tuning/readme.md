@@ -10,3 +10,87 @@
 
 Explain -> BUild a query plan and display info about it 
 Explain analyze -> Build a query plan, run it, and info about it
+
+
+# The framework
+When a query is slow:
+1. Understand the query
+
+2. Inspect the execution plan
+    - Sequential scans
+    - Nested loops on large datasets
+    - Hash joins vs merge joins
+    - Row estimates vs actual rows
+
+3. Identify the bottleneck
+    - Is it scanning too much data?
+    - is it joining inefficiently?
+    - Is it sorting or grouping too much?
+
+# Core optimization patterns
+
+1. Indexing
+Stop scanning everything
+The question is "Why is the database reading so many rows just to find a few?"
+A table without an index is like reading a whole book to find just a sentence
+an when you add an index:
+- Jumping directly to the page
+
+They trade write cost for read speed
+
+- Composite indexes
+``` sql
+WHERE user_id = 10 AND status = 'paid'
+
+CREATE INDEX idx_orders_user_status ON orders(user_id, status);
+```
+- Covering index (avoid table access)
+
+``` sql
+SELECT user_id, status FROM orders WHERE user_id = 10;
+
+CREATE INDEX idx_cover ON orders(user_id, status);
+```
+
+- Partial index
+
+```
+WHERE status = 'active'
+
+CREATE INDEX idx_active_users ON users(id)
+WHERE status = 'active';
+```
+
+2. Reduce data early (Filter pushdown)
+Reduce rows before join
+
+Bad:
+
+``` sql
+SELECT * FROM orders
+JOIN users ON ...
+WHERE users.country = 'MX';
+```
+Better:
+
+``` sql
+SELECT * FROM orders
+JOIN (
+  SELECT id FROM users WHERE country = 'MX'
+) u ON ...
+```
+
+3. Avoid SELECT *
+Bad:
+``` sql
+SELECT * FROM large_table;
+```
+Better:
+``` sql
+SELECT id, name FROM large_table;
+```
+
+This reduces:
+- I/O
+- Memory
+- Network
