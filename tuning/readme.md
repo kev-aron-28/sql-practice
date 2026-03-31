@@ -94,3 +94,86 @@ This reduces:
 - I/O
 - Memory
 - Network
+
+# Cardinality estimation
+Cardinality = How many rows PostgreSQL thinks each step will return
+
+Everything depends on:
+- index vs seq scan
+- join type
+- join order
+
+# Join order optimization
+
+In what order should we join?
+
+Possible join orders:
+
+```
+(A JOIN B) JOIN C
+(A JOIN C) JOIN B
+(B JOIN C) JOIN A
+```
+
+## Example
+
+Case 1
+
+```
+A → 1M rows
+B → 1K rows
+C → 10 rows
+```
+
+Best strategy:
+
+```
+(B JOIN C) → small result
+→ then join with A
+```
+
+Case 2 
+
+With a bad strategy
+
+```
+(A JOIN B) first → huge result
+→ then join C
+```
+
+Explodes in size so this is slow
+
+# How PostgreSQL chooses join order
+
+1. Estimate size of each table
+
+2. Estimate join selectivity
+
+# Join Algorithms
+
+1. Nested loop
+
+```
+for each row in A:
+  scan B
+```
+
+Good when:
+- A is small
+- B is indexed
+
+2. Hash join
+Build a hash table on smaller table probe with larger table
+
+Good when:
+- Large datasets
+- no index
+
+3. Merge join
+
+Sort both tables then merge
+
+Good when:
+- Already sorted
+- Large joins
+
