@@ -225,3 +225,131 @@ having count(*) > 1;
 select p."name", count(*) from products p join order_items oi on oi.product_id = p.id
 group by p."name";
 
+-- D. Subqueries
+
+-- 1. Find users who spent above average
+with total_spent_by_user as (
+select o.user_id, sum(quantity * price_at_purchase) as total from orders o 
+join order_items oi on oi.order_id = o.id
+group by o.user_id
+)
+
+select user_id from total_spent_by_user where
+total > (select avg(total) from total_spent_by_user);
+
+-- 2. Get products priced above category average
+WITH price_per_category AS (
+    SELECT p.category, AVG(p.price) AS avg_price
+    FROM products p
+    GROUP BY p.category
+)
+
+SELECT *
+FROM products p
+WHERE p.price > (
+    SELECT avg_price
+    FROM price_per_category pc
+    WHERE pc.category = p.category
+);
+
+-- 3. Find orders with total value greater than any single product price
+with total_per_order as (
+	select o.id, sum(oi.price_at_purchase * oi.quantity) as total from orders o
+	join order_items oi on oi.order_id = o.id
+	group by o.id
+)
+
+select id, total from total_per_order where total > any (select price from products) 
+
+-- 4. Get users who made the most expensive order.
+
+select o.id, sum(oi.price_at_purchase * oi.quantity) from orders o
+join order_items oi on oi.order_id = o.id
+group by o.id
+
+
+-- 5. Find products that have the highest rating in their category.
+
+select p.category, p."name", round(avg(r.rating),2) as avg_rating from products p left join reviews r
+on r.product_id = p.id
+group by p.category, p."name"
+order by avg_rating desc
+
+
+
+
+-- E. window functions
+
+-- 1. Rank users by total spending.
+
+WITH user_totals AS (
+    SELECT u.id,
+           COALESCE(SUM(oi.price_at_purchase * oi.quantity), 0) AS total_spent
+    FROM users u
+    LEFT JOIN orders o 
+        ON o.user_id = u.id 
+        AND o.status != 'cancelled'
+    LEFT JOIN order_items oi 
+        ON oi.order_id = o.id
+    GROUP BY u.id
+)
+
+SELECT *,
+       DENSE_RANK() OVER (ORDER BY total_spent DESC) AS rank
+FROM user_totals
+ORDER BY total_spent DESC;
+
+
+-- 2. Dense rank products by price within category.
+-- 3. Running total of revenue by date.
+-- 4. For each order, show cumulative spending per user.
+-- 5. Find the second most expensive product per category.
+-- 6. Find top 2 users per country by spending.
+
+
+-- F. CTEs
+
+-- 1. Compute total revenue per user, then filter top 3.
+-- 2. Build a query that calculates daily revenue.
+-- 3. Find retention: users who logged in on consecutive days.
+-- 4. Find first purchase date per user, then calculate days to second purchase.
+-- 5. Build cohort analysis (group users by signup month and track orders).
+
+
+-- G. Case + Conditional Aggregation
+
+-- 1. Count orders by status per user.
+-- 2. Calculate revenue split by payment method.
+-- 3. Count how many 5-star reviews per product.
+-- 4. Create a pivot:=columns: status (paid, pending, etc.) values: count of orders
+
+-- H Analytics
+-- 1. Find conversion rate: users who logged in vs users who purchased
+-- 2. Funnel: login → purchase
+-- 3. Find churned users: no activity in last X days
+-- 4. Average time between first login and first purchase
+-- 5. Lifetime value (LTV) per user
+
+
+-- I. Graph / Social queries
+
+-- 1. Find users with the most friends.
+-- 2. Suggest friends (friends of friends not already friends).
+-- 3. Find mutual friends between two users.
+-- 4. Find users with at least 3 mutual connections.
+
+
+-- J. Event-Based Queries (Time-Series)
+
+-- 1. Daily active users (DAU).
+-- 2. Count events per user per day.
+-- 3. Find users who logged in but didn’t purchase.
+-- 4. Sessionization: group events into sessions (30 min gap)
+-- 5. Find peak activity hour.
+
+-- K. Performacne / optimization thinking
+-- 1. Add indexes to optimize: Order lookup by user, product filtering by category
+-- 2. Rewrite a query to avoid subqueries
+-- 3. Compare IN vs EXISTS
+-- 4. Identify N + 1 query patterns
+-- 5. 
