@@ -92,8 +92,6 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
-
-
 7. EXCLUSION CONSTRAINT
 CREATE TABLE reservations (
   room_id INT,
