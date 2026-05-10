@@ -126,6 +126,88 @@ $$ LANGUAGE plpgsql;
 
 -- Create a function returning a table:
 
+create or replace function get_products_by_category(category_name TEXT)
+returns table(id bigint, name text, price numeric(10,2), stock int) as $$
+BEGIN
+	return QUERY
+	select id,name,text,price,stock from products
+	where category = category_name;
+
+END;
+$$ LANGUAGE 
+
+
+-- Exercise 8 — Customer Orders Summary
+-- Create a table-returning function:
+-- get_customer_orders(customer_id BIGINT)
+
+create or replace function get_customer_orders(customer_id_p bigint)
+returns table(order_id bigint, status text, total numeric(10,2), created_at TIMESTAMP) as $$
+BEGIN
+	return query
+	select order_id, status, total, created_at from orders where customer_id = customer_id_p
+	order by created_at;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Exercise 9 — Top Customers
+-- Create a function returning:
+
+-- customer name
+-- total spent
+
+CREATE OR REPLACE FUNCTION top_customers()
+RETURNS TABLE(
+    customer_name TEXT,
+    total_spent NUMERIC(10,2)
+) AS $$
+BEGIN
+
+    RETURN QUERY
+    SELECT
+        c.full_name,
+        SUM(o.total)::NUMERIC(10,2) AS total_spent
+    FROM customers c
+    JOIN orders o
+        ON o.customer_id = c.id
+    WHERE o.status = 'paid'
+    GROUP BY c.id, c.full_name
+    ORDER BY total_spent DESC;
+
+END;
+$$ LANGUAGE plpgsql;
+
+-- Exercise 10 — Update Product Stock
+create or replace procedure update_product_stock(product_id_p bigint, quantity_to_remove int)
+language plpgsql
+as $$
+DECLARE
+	current_stock int;
+BEGIN
+	select stock
+	into current_stock
+	from products
+	where id = product_id_p
+	for update;
+	
+	if not found then
+		raise exception 'Product not found';
+	end if;
+	
+	if quantity_to_remove > current_stock then
+		raise exception 'Insufficient stock. Current Stock %', current_stock;
+	end if;
+	
+	update products
+	set stock = stock - quantity_to_remove
+	where id = product_id_p;
+END;
+$$;
+
+-- Exercise 11 — Add Loyalty Points
+
+
 
 
 
