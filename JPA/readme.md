@@ -251,3 +251,109 @@ spring.jpa.properties.hibernate.format_sql=true
 | One-to-Many  | `@OneToMany`  |
 | Many-to-One  | `@ManyToOne`  |
 | Many-to-Many | `@ManyToMany` |
+
+
+## Example ManyToOne
+
+``` java
+@Entity
+public class User {
+
+    @Id
+    private Long id;
+
+    private String name;
+}
+
+@Entity
+@Table(name = "orders")
+public class Order {
+
+    @Id
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private BigDecimal total;
+}
+```
+
+JoinColumn defines the foreing key column
+
+## Example OneToMany
+``` java
+@Entity
+public class User {
+
+    @Id
+    private Long id;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
+}
+```
+
+mappedBy: The relationship is owned by the user field inside order
+
+## Owning side
+The side that contains:
+
+- foreign key
+- @JoinColumn
+
+## Example OneToOne
+
+```
+profiles
+--------
+id
+user_id UNIQUE
+bio
+
+@OneToOne
+@JoinColumn(name = "user_id")
+private User user;
+
+
+--
+
+@OneToOne(mappedBy = "user")
+private Profile profile;
+```
+
+## Example Many to many
+
+```
+student_courses
+----------------
+student_id
+course_id
+---
+
+@ManyToMany
+@JoinTable(
+    name = "student_courses",
+    joinColumns = @JoinColumn(name = "student_id"),
+    inverseJoinColumns = @JoinColumn(name = "course_id")
+)
+private List<Course> courses;
+
+```
+
+# Cascade types
+
+- PERSIST
+- MERGE
+- REMOVE
+- ALL
+
+# Fetch types
+- LAZY
+
+``` java
+@ManyToOne(fetch = FetchType.LAZY)
+```
+
+- EAGER
