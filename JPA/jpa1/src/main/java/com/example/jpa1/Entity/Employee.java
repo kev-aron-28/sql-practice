@@ -2,8 +2,6 @@ package com.example.jpa1.Entity;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.ManyToAny;
-
 import com.example.jpa1.EmployeeStatus;
 
 import jakarta.persistence.Column;
@@ -33,7 +31,7 @@ public class Employee extends BaseEntity {
 
     private LocalDateTime hiredAt;
 
-    @ManyToAny(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="department_id")
     private Department department;
 
