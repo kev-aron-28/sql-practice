@@ -29,8 +29,9 @@ public class Project extends BaseEntity {
     @Column(precision=15,scale=2)
     private BigDecimal budget;
 
-
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    
 }

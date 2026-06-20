@@ -357,3 +357,40 @@ private List<Course> courses;
 ```
 
 - EAGER
+
+
+# Repositories
+
+``` java
+public interface UserRepository extends JpaRepository<User, Long> {
+
+}
+```
+
+# Methods heredados de JpaRepository
+``` java
+save()
+findById()
+findAll()
+delete()
+deleteById()
+existsById()
+count()
+```
+
+# Query methods
+- Igualdad: findByname
+- AND: findByNameAndAge
+- OR findByNameOrEmail
+- >: findByAgeGreaterThan()
+- <: findByAgeLessThan()
+- between: findByAgeBetween()
+
+# Text
+- like: findByNameLike(String patter)
+- containing: findByNameContaining(String value)
+- starting with: findByNameStartingWith
+- ending with: findByNameEndingWith()
+- ignore case: findByNameIgnoreCase()
+
+# Collections

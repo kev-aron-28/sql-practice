@@ -1,7 +1,11 @@
 package com.example.jpa1.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Company extends BaseEntity {
@@ -10,6 +14,9 @@ public class Company extends BaseEntity {
 
     @Column(nullable=false)
     private boolean active = true;
+
+    @OneToMany(mappedBy="company")
+    private List<Project> projects = new ArrayList<>();
 
     public Company() {
     }

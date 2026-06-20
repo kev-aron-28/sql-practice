@@ -1,6 +1,8 @@
 package com.example.jpa1.Entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.jpa1.EmployeeStatus;
 
@@ -11,6 +13,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Employee extends BaseEntity {
@@ -38,5 +41,9 @@ public class Employee extends BaseEntity {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="manager_id")
     private Employee manager;
+
+
+    @OneToMany(mappedBy="manager")
+    private List<Employee> subordinates = new ArrayList<>();
     
 }
