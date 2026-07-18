@@ -134,45 +134,37 @@ FROM sales;
 
 **For each employee, go through their rows in date order, and add up everything so far**
 
+# Frame
+Think of the frame as a slinding window
+
+Suppose we're currently evaluating this row:
+
+```
+4000
+2200
+3500  ← current row
+1800
+4200
+2800
+```
+
+The question becomes: Which rows is this row allowed to look at?
+The answer depends on the frame
 
 
+The default frame is:
 
+``` sql
+ROWS BETWEEN
+UNBOUNDED PRECEDING
+AND CURRENT ROW
+```
 
+This means, start at the first row and stop at the current row
+Understanding the key words:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Current row: Means exactly what it says
+- unbounded preceding: Go all the way to the beginning
+- UNBOUNDED FOLLOWING: Go all the way to the end.
+- X preceding
+- X following
